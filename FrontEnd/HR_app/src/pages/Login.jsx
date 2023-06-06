@@ -1,7 +1,7 @@
 import React from "react";
 import Form from "../components/commons/Form";
 import authService from "../services/authService";
-import { useAuth } from "../context/auth";
+// import { useAuth } from "../context/auth";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
@@ -9,10 +9,12 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = (data) => {
-    authService.login(data).then((decodedToken) => {
-      dispatch({ type: "LOGIN", payload: decodedToken });
+    console.log('hola, soy login');
+    console.log(data);
+    // authService.login(data).then((decodedToken) => {
+    //   dispatch({ type: "LOGIN", payload: decodedToken });
       navigate("/dashboard");
-    });
+    // });
   };
 
   return (
