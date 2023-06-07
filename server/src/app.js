@@ -1,7 +1,7 @@
 const express = require("express");
 const mysql = require("mysql2");
 const bodyParser = require("body-parser");
-const corsss = require("cors");
+const cors = require("cors");
 require('dotenv').config();
 
 // RUTAS ----------------------------------
