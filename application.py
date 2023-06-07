@@ -57,55 +57,44 @@ def get_db():
 
 @app.route('/db/graph/pie', methods=['GET'])
 def get_graph_pie():
-
-    df=make_query("SELECT months_left FROM replacement")
-
-    # Supongamos que tienes un dataframe llamado "df" con una columna llamada "column_name"
-    column_name = df['months_left'].astype(float)
-    # Calcula los cuartiles utilizando la función quantile()
-    q1 = column_name.quantile(0.25)
-    q2 = column_name.quantile(0.5)
-    q3 = column_name.quantile(0.75)
-    # Cuenta el número de valores en cada cuartil
-    count_q1 = column_name[column_name <= q1].count()
-    count_q2 = column_name[(column_name > q1) & (column_name <= q2)].count()
-    count_q3 = column_name[(column_name > q2) & (column_name <= q3)].count()
-    count_q4 = column_name[column_name > q3].count()
-    column1=["Very High","High","Medium","Low"]
-    column2=[count_q1,count_q2,count_q3,count_q4]
-    data = {"risk": column1, "data": column2}
-    df = pd.DataFrame(data)
-    df['percentage'] = (df['data'] / df['data'].sum()) * 100
-
-    count_values = df.set_index('risk')['data']
+    df_risk=make_query("""SELECT risk from replacement""")
+    count_values = df_risk.value_counts()
 
     colors = {
         "Low": "#00CC96",
         "Medium": "#B6E880",
         "High": "#FFA15A",
-        "Very High": "#EF553B"
+        "Very high": "#EF553B"
     }
-    fig = go.Figure(data=[go.Pie(labels=count_values.index, values=count_values.values, hole=0.4, pull=[0.05, 0.05, 0.05, 0.05])])
-    fig.update_traces(
-        marker=dict(colors=[colors[label] for label in count_values.index]),
-        textfont=dict(size=22)  # Aumentar el tamaño de los valores
-    )
+    count_values = {
+        "High": 951,
+        "Very high": 931,
+        "Low": 918,
+        "Medium": 898
+    }
+    fig = go.Figure(data=[
+        go.Pie(
+            labels=list(count_values.keys()),  # Convert dict_keys to a list
+            values=list(count_values.values()),  # Convert dict_values to a list
+            hole=0.4,
+            pull=[0.05, 0.05, 0.05, 0.05],
+            marker=dict(colors=[colors[label] for label in count_values.keys()])
+        )
+    ])
+    fig.update_traces(textfont=dict(size=22))
     fig.update_layout(
-        title={"text":"Distribution Risk Attrition",
-            "x":0.5},
+        title="Distribution risk attrition",
         title_font=dict(size=24),
         legend=dict(
             orientation="h",
             yanchor="bottom",
             y=1.02,
             xanchor="center",
-            x=0.5,
-            traceorder='normal'
-        )
+            x=0.5
+        ),
+        title_x=0.5
     )
-
-    graph = fig.to_json()
-
+    graph=fig.to_json()
     return graph
 
 @app.route('/db/graph/bar1', methods=['GET'])
