@@ -2,9 +2,12 @@
 import mysql.connector
 import pandas as pd
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 import pickle
 import plotly.graph_objects as go
 import plotly.express as px
+
+
 
 cnx = mysql.connector.connect(
     user="admin",
@@ -243,3 +246,4 @@ def predict():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+    cors = CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}})
