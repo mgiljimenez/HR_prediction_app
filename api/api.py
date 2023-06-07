@@ -5,13 +5,12 @@ from flask import Flask, jsonify, request
 import pickle
 import plotly.graph_objects as go
 import plotly.express as px
-from variables_entorno import user_db,password_db,host_db,database_db
 
 cnx = mysql.connector.connect(
-    user=user_db,
-    password=password_db,
-    host=host_db,
-    database=database_db
+    user="admin",
+    password="admin123",
+    host="test-db.cze2nnbbx5pc.eu-west-3.rds.amazonaws.com",
+    database="prueba"
 )
 cursor = cnx.cursor()
 
