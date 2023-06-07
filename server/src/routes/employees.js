@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
   const offset = (page - 1) * sizePage;
 
   const sql =
-    "SELECT * FROM current_employees LIMIT " + sizePage + " OFFSET " + offset;
+    "SELECT * FROM replacement LIMIT " + sizePage + " OFFSET " + offset;
   const [rows, fields] = await pool.query(sql);
 
   res.json(rows);
@@ -23,7 +23,7 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   const id = req.params.id;
-  const sql = "SELECT * FROM current_employees WHERE id_employee = " + id;
+  const sql = "SELECT * FROM replacement WHERE id_employee = " + id;
   const [rows, fields] = await pool.query(sql);
 
   res.json(rows);
@@ -33,7 +33,7 @@ router.get("/:id", async (req, res) => {
 
 router.get("/role/:role", async (req, res) => {
     const role = req.params.role;
-    const sql = "SELECT * FROM current_employees WHERE role = ?";
+    const sql = "SELECT * FROM replacement WHERE role = ?";
     const [rows, fields] = await pool.query(sql, [role]);
     res.json(rows);
   });
@@ -42,7 +42,7 @@ router.get("/role/:role", async (req, res) => {
 
 router.get("/name/:name", async (req, res) => {
     const name = req.params.name;
-    const sql = "SELECT * FROM current_employees WHERE name =?";
+    const sql = "SELECT * FROM replacement WHERE name =?";
     const [rows, fields] = await pool.query(sql, [name]);
     res.json(rows);
   });
