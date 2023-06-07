@@ -150,54 +150,51 @@ def get_graph_bar1():
         height=500,
         title_x=0.5,
     )
-    
+
     graph = fig.to_json()
     return graph
 
 @app.route('/db/graph/bar2', methods=['GET'])
 def get_graph_bar2():
 
-    grouped_df = make_query("SELECT role, risk FROM replacement")#new_df.groupby(['JobRole', 'RiskAttrition']).size().unstack()
-    total_counts = grouped_df.sum(axis=1)
-    percentage_df = grouped_df.divide(total_counts, axis=0) * 100
+    df = make_query("SELECT job_level, risk FROM replacement")
+    df_agg = df.groupby(['job_level', 'risk']).size().reset_index(name='count')
+    df_agg['percentage'] = df_agg.groupby('job_level')['count'].apply(lambda x: (x / x.sum()) * 100)
 
-    # Crear la gráfica de barras
     fig = go.Figure()
 
-    # Definir los colores para cada categoría de RiskAttrition
     colors = {
         "Low": "#00CC96",
         "Medium": "#B6E880",
         "High": "#FFA15A",
-        "Very High": "#EF553B"
+        "Very high": "#EF553B"
     }
 
-    # Agregar las barras al gráfico
-    for risk in df.set_index('risk')['data'].unique():
+    for risk in df_agg['risk'].unique():
+        df_filtered = df_agg[df_agg['risk'] == risk]
         fig.add_trace(go.Bar(
-        x=percentage_df[risk],
-        y=percentage_df.index,
-        name=risk,
-        orientation='h',
-        marker=dict(color=colors[risk]),
-        text=percentage_df[risk].round(2).astype(str) + '%',
-        textposition='auto'
-    ))
+            x=df_filtered['percentage'],
+            y=df_filtered['job_level'],
+            name=risk,
+            orientation='h',
+            marker=dict(color=colors[risk]),
+            text=df_filtered['percentage'].apply(lambda x: f"{x:.2f}%"),
+            textposition='auto'
+        ))
 
-# Personalizar el diseño del gráfico
     fig.update_layout(
-    title={
-        'text': 'Distribution risk attrition by job level',
-        'font': {'size': 24}
-    },
-    xaxis=dict(title=''),
-    yaxis=dict(title='Job Level'),
-    barmode='stack',
-    autosize=False,
-    width=800,
-    height=500,
-    title_x=0.5,
-)
+        title={
+            'text': 'Distribution risk attrition by job level',
+            'font': {'size': 24}
+        },
+        xaxis=dict(title=''),
+        yaxis=dict(title='Job Level'),
+        barmode='stack',
+        autosize=False,
+        width=800,
+        height=500,
+        title_x=0.5,
+    )
 
     graph = fig.to_json()
     return graph
@@ -209,7 +206,7 @@ def get_graph_line():
     df=make_query("SELECT months_left FROM replacement")
 
     # Obtener el conteo de valores para cada categoría en Prediction_nº_Months
-    counts = df['Prediction_nº_Months'].value_counts().sort_index()
+    counts = df['months_left'].value_counts().sort_index()
 
     # Filtrar los valores menores o iguales a 24
     counts_filtered = counts.loc[counts.index <= 24]
