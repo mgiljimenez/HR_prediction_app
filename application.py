@@ -8,6 +8,7 @@ import os
 
 import pickle
 import plotly.graph_objects as go
+import plotly.express as px
 import plotly
 
 cnx = mysql.connector.connect(
@@ -55,9 +56,10 @@ def get_db():
 
 
 @app.route('/db/graph/pie', methods=['GET'])
-def get_graph():
+def get_graph_pie():
 
-    df=make_query("SELECT months_left from predictions")
+    df=make_query("SELECT months_left FROM replacement")
+
     # Supongamos que tienes un dataframe llamado "df" con una columna llamada "column_name"
     column_name = df['months_left'].astype(float)
     # Calcula los cuartiles utilizando la función quantile()
@@ -69,12 +71,14 @@ def get_graph():
     count_q2 = column_name[(column_name > q1) & (column_name <= q2)].count()
     count_q3 = column_name[(column_name > q2) & (column_name <= q3)].count()
     count_q4 = column_name[column_name > q3].count()
-    column1=["Low","Medium","High","Very High"]
+    column1=["Very High","High","Medium","Low"]
     column2=[count_q1,count_q2,count_q3,count_q4]
     data = {"risk": column1, "data": column2}
     df = pd.DataFrame(data)
     df['percentage'] = (df['data'] / df['data'].sum()) * 100
+
     count_values = df.set_index('risk')['data']
+
     colors = {
         "Low": "#00CC96",
         "Medium": "#B6E880",
@@ -103,6 +107,128 @@ def get_graph():
     graph = fig.to_json()
 
     return graph
+
+@app.route('/db/graph/bar1', methods=['GET'])
+def get_graph_bar1():
+
+    df = make_query("SELECT role, risk FROM replacement")
+
+    df_agg = df.groupby(['role', 'risk']).size().reset_index(name='count')
+    df_agg['percentage'] = df_agg.groupby('role')['count'].apply(lambda x: (x / x.sum()) * 100)
+
+    fig = go.Figure()
+
+    colors = {
+        "Low": "#00CC96",
+        "Medium": "#B6E880",
+        "High": "#FFA15A",
+        "Very high": "#EF553B"
+    }
+
+    for risk in df_agg['risk'].unique():
+        df_filtered = df_agg[df_agg['risk'] == risk]
+        fig.add_trace(go.Bar(
+            x=df_filtered['percentage'],
+            y=df_filtered['role'],
+            name=risk,
+            orientation='h',
+            marker=dict(color=colors[risk]),
+            text=df_filtered['percentage'].apply(lambda x: f"{x:.2f}%"),
+            textposition='auto'
+        ))
+
+    fig.update_layout(
+        title={
+            'text': 'Distribution risk attrition by job role',
+            'font': {'size': 24}
+        },
+        xaxis=dict(title='Porcentaje'),
+        yaxis=dict(title='JobRole'),
+        barmode='stack',
+        autosize=False,
+        width=800,
+        height=500,
+        title_x=0.5,
+    )
+    
+    graph = fig.to_json()
+    return graph
+
+@app.route('/db/graph/bar2', methods=['GET'])
+def get_graph_bar2():
+
+    grouped_df = make_query("SELECT role, risk FROM replacement")#new_df.groupby(['JobRole', 'RiskAttrition']).size().unstack()
+    total_counts = grouped_df.sum(axis=1)
+    percentage_df = grouped_df.divide(total_counts, axis=0) * 100
+
+    # Crear la gráfica de barras
+    fig = go.Figure()
+
+    # Definir los colores para cada categoría de RiskAttrition
+    colors = {
+        "Low": "#00CC96",
+        "Medium": "#B6E880",
+        "High": "#FFA15A",
+        "Very High": "#EF553B"
+    }
+
+    # Agregar las barras al gráfico
+    for risk in df.set_index('risk')['data'].unique():
+        fig.add_trace(go.Bar(
+        x=percentage_df[risk],
+        y=percentage_df.index,
+        name=risk,
+        orientation='h',
+        marker=dict(color=colors[risk]),
+        text=percentage_df[risk].round(2).astype(str) + '%',
+        textposition='auto'
+    ))
+
+# Personalizar el diseño del gráfico
+    fig.update_layout(
+    title={
+        'text': 'Distribution risk attrition by job level',
+        'font': {'size': 24}
+    },
+    xaxis=dict(title=''),
+    yaxis=dict(title='Job Level'),
+    barmode='stack',
+    autosize=False,
+    width=800,
+    height=500,
+    title_x=0.5,
+)
+
+    graph = fig.to_json()
+    return graph
+
+
+@app.route('/db/graph/line', methods=['GET'])
+def get_graph_line():
+
+    df=make_query("SELECT months_left FROM replacement")
+
+    # Obtener el conteo de valores para cada categoría en Prediction_nº_Months
+    counts = df['Prediction_nº_Months'].value_counts().sort_index()
+
+    # Filtrar los valores menores o iguales a 24
+    counts_filtered = counts.loc[counts.index <= 24]
+
+    # Crear la gráfica de series de tiempo
+    fig = px.line(x=counts_filtered.index, y=counts_filtered.values, title="Prediction attrition for next 24 months")
+
+    fig.update_traces(line_width=3, mode='lines+markers', hovertemplate='Month: %{x}<br>Nº of attrition: %{y}')  # Ajustar el grosor de la línea, agregar marcadores circulares y personalizar etiquetas
+
+    fig.update_layout(xaxis=dict(
+        tickmode='array',
+        tickvals=counts_filtered.index,
+        ticktext=counts_filtered.index
+    ), xaxis_title="next 24 months", yaxis_title="Nº of attrition", title_x=0.5, title_font={'size': 24})
+
+    graph = fig.to_json()
+    return graph
+
+
 
 @app.route('/db/predict', methods=['GET'])
 def predict():
