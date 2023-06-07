@@ -110,9 +110,7 @@ def get_graph_pie():
 
 @app.route('/db/graph/bar1', methods=['GET'])
 def get_graph_bar1():
-
     df = make_query("SELECT role, risk FROM replacement")
-
     df_agg = df.groupby(['role', 'risk']).size().reset_index(name='count')
     df_agg['percentage'] = df_agg.groupby('role')['count'].apply(lambda x: (x / x.sum()) * 100)
 
@@ -262,4 +260,5 @@ def predict():
 #     return jsonify(db)
 
 
-app.run()
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
