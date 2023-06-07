@@ -1,21 +1,17 @@
 #Importamos la librerías y variables necesarias
-
 import mysql.connector
 import pandas as pd
 from flask import Flask, jsonify, request
-import plotly as plt
-import os
-
 import pickle
 import plotly.graph_objects as go
 import plotly.express as px
-import plotly
+from variables_entorno import user_db,password_db,host_db,database_db
 
 cnx = mysql.connector.connect(
-    user="admin",
-    password="admin123",
-    host="test-db.cze2nnbbx5pc.eu-west-3.rds.amazonaws.com",
-    database="prueba"
+    user=user_db,
+    password=password_db,
+    host=host_db,
+    database=database_db
 )
 cursor = cnx.cursor()
 
@@ -246,5 +242,4 @@ def predict():
 #     return jsonify(db)
 
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+app.run()
