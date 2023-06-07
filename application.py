@@ -3,7 +3,12 @@
 import mysql.connector
 import pandas as pd
 from flask import Flask, jsonify, request
+import plotly as plt
 import os
+
+import pickle
+import plotly.graph_objects as go
+import plotly
 
 cnx = mysql.connector.connect(
     user="admin",
@@ -19,7 +24,7 @@ def make_query(code):
     results = cursor.fetchall()
     column_names = [desc[0] for desc in cursor.description]  # Obtener los nombres de las columnas
     df = pd.DataFrame(results, columns=column_names)  # Crear el DataFrame
-    return df.to_json(orient="split",index=False)
+    return df
 
 # os.chdir(os.path.dirname(__file__))
 app = Flask(__name__)
@@ -32,7 +37,7 @@ def devolver_tabla():
     return tabla
 
 @app.route('/db/query', methods=['GET'])
-def get_query():
+def get_db():
     
     table = request.args.get("table")
     requested = request.args
@@ -49,22 +54,86 @@ def get_query():
     return db
 
 
-@app.route('/db/graph', methods=['GET'])
+@app.route('/db/graph/pie', methods=['GET'])
 def get_graph():
 
-    table = request.args.get("table")
-    requested = request.args
-    items = requested.items()
-    query = [f"SELECT * FROM {table} WHERE "]
+    df=make_query("SELECT months_left from predictions")
+    # Supongamos que tienes un dataframe llamado "df" con una columna llamada "column_name"
+    column_name = df['months_left'].astype(float)
+    # Calcula los cuartiles utilizando la función quantile()
+    q1 = column_name.quantile(0.25)
+    q2 = column_name.quantile(0.5)
+    q3 = column_name.quantile(0.75)
+    # Cuenta el número de valores en cada cuartil
+    count_q1 = column_name[column_name <= q1].count()
+    count_q2 = column_name[(column_name > q1) & (column_name <= q2)].count()
+    count_q3 = column_name[(column_name > q2) & (column_name <= q3)].count()
+    count_q4 = column_name[column_name > q3].count()
+    column1=["Low","Medium","High","Very High"]
+    column2=[count_q1,count_q2,count_q3,count_q4]
+    data = {"risk": column1, "data": column2}
+    df = pd.DataFrame(data)
+    df['percentage'] = (df['data'] / df['data'].sum()) * 100
+    count_values = df.set_index('risk')['data']
+    colors = {
+        "Low": "#00CC96",
+        "Medium": "#B6E880",
+        "High": "#FFA15A",
+        "Very High": "#EF553B"
+    }
+    fig = go.Figure(data=[go.Pie(labels=count_values.index, values=count_values.values, hole=0.4, pull=[0.05, 0.05, 0.05, 0.05])])
+    fig.update_traces(
+        marker=dict(colors=[colors[label] for label in count_values.index]),
+        textfont=dict(size=22)  # Aumentar el tamaño de los valores
+    )
+    fig.update_layout(
+        title={"text":"Distribution Risk Attrition",
+            "x":0.5},
+        title_font=dict(size=24),
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="center",
+            x=0.5,
+            traceorder='normal'
+        )
+    )
 
-    for param, value in items:
-        query.append(f"{param} = '{value }'")
-    
-    result = query[0] + " " + "AND ".join(query[2:])
-    db = make_query(result)
+    graph = fig.to_json()
+
+    return graph
+
+@app.route('/db/predict', methods=['GET'])
+def predict():
+
+    table = "current_employees" # Cambiar por predictions
+    # id = request.args.get("id_employee")
+    query = f"SELECT * FROM {table}'"
+
+    db = make_query(query)
+
+    model = pickle.load(open('JP_0606_1_Ridge.pickle','rb')) # Cambiar ruta modelo
+
+    colums_to_drop = ["id_employee", "name", "involvement", "performance", "environment", "satisfaction", "life_balance", "attrition", "travel", "department",
+                     "education", "education_field", "gender", "role", "marital_status", "hours", "department", "years_company"]
+
+    db.drop(columns=colums_to_drop, inplace=True)
+    prediction = model.predict(db)
+
+    return jsonify({'prediction': prediction[0]})
+
+# @app.route('/db/get_prediction', methods=['GET'])
+# def get_prediction():
+
+#     table = "predictions"
+#     id = request.args.get("id_employee")
+#     query = [f"SELECT * FROM {table} WHERE id_employee = '{id}'"]
+
+#     db = make_query(query)
 
 
-    return jsonify(db)
+#     return jsonify(db)
 
 
 app.run()
