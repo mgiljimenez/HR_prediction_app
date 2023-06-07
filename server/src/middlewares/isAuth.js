@@ -8,8 +8,10 @@ module.exports = function (req, res, next) {
     const decoded = jwt.verify(token_jwt, process.env['jwt_privateKey'])
     req.user = decoded
 
+
     next()
   } catch (err) {
     res.status(401).send('Token invalido')
+    console.log(err)
   }
 }

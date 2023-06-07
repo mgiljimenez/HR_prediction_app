@@ -76,7 +76,7 @@ router.post('/signin', bodyParser.json(), validateSigninData, async (req, res) =
         return res.status(401).json({ message: 'Usuario o contraseña incorrecta' });
       }
   
-      const token = jwt.sign({ name: user.name }, 'secretKey'); // Cambia 'secretKey' a tu clave secreta
+      const token = jwt.sign({ name: user.name }, process.env['jwt_privateKey']); // Cambia 'secretKey' a tu clave secreta
   
       res.setHeader('access-control-expose-headers', 'x-auth-token');
       res.setHeader('x-auth-token', token).json({ message: 'Inicio de sesión exitoso' });
