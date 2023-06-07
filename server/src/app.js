@@ -1,6 +1,7 @@
 const express = require("express");
 const mysql = require("mysql2");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 require('dotenv').config();
 
 // RUTAS ----------------------------------
@@ -14,6 +15,9 @@ app.set("port", process.env.PORT || 4000);
 
 app.use("/employees", employeesRouter);
 app.use("/users", usersRouter);
+app.use(cors({
+  origin: '*'
+  }));
 
 
 // SERVER RUNNING--------------------------
