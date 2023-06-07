@@ -28,7 +28,7 @@ def make_query(code):
 # os.chdir(os.path.dirname(__file__))
 app = Flask(__name__)
 app.config['DEBUG'] = True
-cors = CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}})
+CORS(app)
 
 @app.route('/db', methods=['GET'])
 def devolver_tabla():
