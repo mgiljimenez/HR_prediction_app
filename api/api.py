@@ -15,7 +15,7 @@ cnx = mysql.connector.connect(
     host="test-db.cze2nnbbx5pc.eu-west-3.rds.amazonaws.com",
     database="prueba"
 )
-cursor = cnx.cursor()
+
 
 def make_query(code):
     '''
@@ -26,10 +26,15 @@ def make_query(code):
     La query utiliza como motor MySQL y debe
     seguir la sintaxis de SQL
     '''
+    cursor = cnx.cursor()
     cursor.execute(code, multi=True)
-    results = cursor.fetchall()
-    column_names = [desc[0] for desc in cursor.description] 
-    df = pd.DataFrame(results, columns=column_names)  
+    results = []
+    for result in cursor:
+        if result.with_rows:
+            # Fetch all rows for the current result set
+            results.append(result.fetchall())
+    column_names = [desc[0] for desc in cursor.description]
+    df = pd.DataFrame(results, columns=column_names)
     return df
 
 app = Flask(__name__)
