@@ -31,6 +31,7 @@ function Employee() {
             </div>
             <div className="leftUp" >
             {" "}
+            <p>id: {employee.id_employee}</p>
             <p>Name: {employee.name}</p>
             <p>Department: {employee.department}</p>
             <p>Role: {employee.role}</p>

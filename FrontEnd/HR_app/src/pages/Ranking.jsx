@@ -1,11 +1,12 @@
-import React from 'react'
+import React from "react";
+import Table from "../components/Table";
 
 function Ranking() {
   return (
-    <div>Ranking
-        <h1>Ranking</h1>
+    <div>
+      <Table />
     </div>
-  )
+  );
 }
 
-export default Ranking
+export default Ranking;
