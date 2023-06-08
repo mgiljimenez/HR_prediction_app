@@ -82,6 +82,8 @@ def get_graph_pie():
             xanchor="center",
             x=0.5
         ),
+        width=600,
+        height=400,
         title_x=0.5,
         paper_bgcolor='rgba(0,0,0,0)' # Fondo transparente
     )
@@ -131,8 +133,8 @@ def get_graph_bar1():
         yaxis=dict(title='JobRole'),
         barmode='stack',
         autosize=False,
-        width=800,
-        height=500,
+        width=600,
+        height=400,
         title_x=0.5,
         paper_bgcolor='rgba(0,0,0,0)' # Fondo transparente
     )
@@ -184,8 +186,8 @@ def get_graph_bar2():
         yaxis=dict(title='Job Level'),
         barmode='stack',
         autosize=False,
-        width=800,
-        height=500,
+        width=600,
+        height=400,
         title_x=0.5,
         paper_bgcolor='rgba(0,0,0,0)' # Fondo transparente
     )
@@ -218,8 +220,8 @@ def get_graph_line():
     yaxis_title="Nº of attrition", 
     title_x=0.5, 
     title_font={'size': 24},
-    width=800,
-    height=500)
+    width=600,
+    height=400)
 
     graph = fig.to_json()
     return graph
@@ -245,8 +247,8 @@ def get_graph_gauge():
     # Tamaño de figura adaptado a la web
     layout = go.Layout(
     title='Gauge Chart',
-    width=800,
-    height=500,
+    width=600,
+    height=400,
     paper_bgcolor='rgba(0,0,0,0)' # Fondo transparente
     )
 
