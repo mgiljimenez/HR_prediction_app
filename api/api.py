@@ -18,24 +18,19 @@ cnx = mysql.connector.connect(
 
 
 def make_query(code):
-    '''
-    Función principal de la API que permite
-    hacer una query a la BD y devuelve el DF
-    resultante para hacer gráficas
+    cnx.close()
+    cnx.connect()
     
-    La query utiliza como motor MySQL y debe
-    seguir la sintaxis de SQL
-    '''
     cursor = cnx.cursor()
     cursor.execute(code, multi=True)
     results = []
-    for result in cursor:
-        if result.with_rows:
-            # Fetch all rows for the current result set
-            results.append(result.fetchall())
+    for result in cursor.stored_results():
+        results.append(result.fetchall())
+    
     column_names = [desc[0] for desc in cursor.description]
     df = pd.DataFrame(results, columns=column_names)
     return df
+
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
