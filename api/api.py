@@ -1,9 +1,8 @@
 #Importamos la librerías y variables necesarias
 import mysql.connector
 import pandas as pd
-from flask import Flask, jsonify, request
+from flask import Flask
 from flask_cors import CORS
-import pickle
 import plotly.graph_objects as go
 import plotly.express as px
 
