@@ -27,9 +27,13 @@ def make_query(code):
     for result in cursor.stored_results():
         results.append(result.fetchall())
     
-    column_names = [desc[0] for desc in cursor.description]
+    column_names = []
+    if cursor.description:
+        column_names = [desc[0] for desc in cursor.description]
+    
     df = pd.DataFrame(results, columns=column_names)
     return df
+
 
 
 app = Flask(__name__)
