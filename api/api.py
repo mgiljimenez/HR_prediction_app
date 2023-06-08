@@ -1,7 +1,7 @@
 #Importamos la librerías y variables necesarias
 import mysql.connector
 import pandas as pd
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
 import plotly.graph_objects as go
 import plotly.express as px
@@ -26,7 +26,7 @@ def make_query(code):
     La query utiliza como motor MySQL y debe
     seguir la sintaxis de SQL
     '''
-    cursor.execute(code)
+    cursor.execute(code, multi=True)
     results = cursor.fetchall()
     column_names = [desc[0] for desc in cursor.description] 
     df = pd.DataFrame(results, columns=column_names)  
