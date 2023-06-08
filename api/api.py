@@ -5,9 +5,10 @@ from flask import Flask
 from flask_cors import CORS
 import plotly.graph_objects as go
 import plotly.express as px
+import numpy as np
 
 
-
+# Conexión a la Base de Datos
 cnx = mysql.connector.connect(
     user="admin",
     password="admin123",
@@ -16,8 +17,15 @@ cnx = mysql.connector.connect(
 )
 cursor = cnx.cursor()
 
-#Definimos una función mediante la que ejecutar las querys devolviendo un dataframe
 def make_query(code):
+    '''
+    Función principal de la API que permite
+    hacer una query a la BD y devuelve el DF
+    resultante para hacer gráficas
+    
+    La query utiliza como motor MySQL y debe
+    seguir la sintaxis de SQL
+    '''
     cursor.execute(code)
     results = cursor.fetchall()
     column_names = [desc[0] for desc in cursor.description] 
@@ -28,12 +36,19 @@ app = Flask(__name__)
 app.config['DEBUG'] = True
 CORS(app)
 
-# Función que devuelve un json a partir de un gráfico de tarta
+
 @app.route('/db/graph/pie', methods=['GET'])
 def get_graph_pie():
+    '''
+    Endpoint que devuelve un gráfico de tarta del
+    reparto del riesgo general en la empresa
+    a partir de una query a la BD y lo devuelve
+    en formato json
+    '''
     df_risk=make_query("""SELECT risk from replacement""")
     count_values = df_risk.value_counts()
 
+    # Estética de la gráfica
     colors = {
         "Low": "#00CC96",
         "Medium": "#B6E880",
@@ -66,20 +81,26 @@ def get_graph_pie():
             xanchor="center",
             x=0.5
         ),
-        title_x=0.5
+        title_x=0.5,
+        paper_bgcolor='rgba(0,0,0,0)' # Fondo transparente
     )
     graph=fig.to_json()
     return graph
 
-# Función que devuelve un json a partir de un gráfico de barras en función del riesgo y rol
 @app.route('/db/graph/bar1', methods=['GET'])
 def get_graph_bar1():
+    '''
+    Endpoint que devuelve un gráfico de barras en función de riesgo
+    y rol a partir de una query a la BD y lo devuelve
+    en formato json
+    '''
     df = make_query("SELECT role, risk FROM replacement")
     df_agg = df.groupby(['role', 'risk']).size().reset_index(name='count')
     df_agg['percentage'] = df_agg.groupby('role')['count'].apply(lambda x: (x / x.sum()) * 100)
 
     fig = go.Figure()
 
+    # Estética de la gráfica
     colors = {
         "Low": "#00CC96",
         "Medium": "#B6E880",
@@ -87,6 +108,7 @@ def get_graph_bar1():
         "Very high": "#EF553B"
     }
 
+    # Barras agrupadas hasta sumar el total del riesgo (100)
     for risk in df_agg['risk'].unique():
         df_filtered = df_agg[df_agg['risk'] == risk]
         fig.add_trace(go.Bar(
@@ -111,6 +133,7 @@ def get_graph_bar1():
         width=800,
         height=500,
         title_x=0.5,
+        paper_bgcolor='rgba(0,0,0,0)' # Fondo transparente
     )
 
     graph = fig.to_json()
@@ -129,6 +152,7 @@ def get_graph_bar2():
 
     fig = go.Figure()
 
+    # Estética de la gráfica
     colors = {
         "Low": "#00CC96",
         "Medium": "#B6E880",
@@ -136,6 +160,7 @@ def get_graph_bar2():
         "Very high": "#EF553B"
     }
 
+    # Barras agrupadas hasta sumar el total del riesgo (100)
     for risk in df_agg['risk'].unique():
         df_filtered = df_agg[df_agg['risk'] == risk]
         fig.add_trace(go.Bar(
@@ -148,6 +173,7 @@ def get_graph_bar2():
             textposition='auto'
         ))
 
+    # Tamaño de figura adaptado a la web
     fig.update_layout(
         title={
             'text': 'Distribution risk attrition by job level',
@@ -160,6 +186,7 @@ def get_graph_bar2():
         width=800,
         height=500,
         title_x=0.5,
+        paper_bgcolor='rgba(0,0,0,0)' # Fondo transparente
     )
 
     graph = fig.to_json()
@@ -186,11 +213,65 @@ def get_graph_line():
         tickmode='array',
         tickvals=counts_filtered.index,
         ticktext=counts_filtered.index
-    ), xaxis_title="next 24 months", yaxis_title="Nº of attrition", title_x=0.5, title_font={'size': 24})
+    ), xaxis_title="next 24 months", 
+    yaxis_title="Nº of attrition", 
+    title_x=0.5, 
+    title_font={'size': 24},
+    width=800,
+    height=500)
 
     graph = fig.to_json()
     return graph
 
+@app.route('/db/graph/gauge', methods=['GET'])
+def get_graph_gauge():
+    '''
+    Endpoint que devuelve un gauge chart del riesgo de un ID concreto
+    partir de una query a la BD y lo devuelve en formato json
+    '''
+    num_steps = 100 
+
+    df=make_query("SELECT risk FROM replacement")
+
+    # Mapeo para poder presentar el riesgo numéricamente
+    risk_mapping = {'Low': 13, 'Medium': 38, 'High': 63, 'Very high':88}
+    df['risk_value'] = df['risk'].map(risk_mapping)
+    id=request.args.get("id")
+
+    # Generar colores interpolados para los pasos de la escala continua
+    colors_interpolated = [f'rgb({int(255*np.sqrt(i/num_steps))}, {int(255*(1-np.sqrt(i/num_steps)))}, 0)' for i in range(num_steps)]
+
+    # Tamaño de figura adaptado a la web
+    layout = go.Layout(
+    title='Gauge Chart',
+    width=800,
+    height=500,
+    paper_bgcolor='rgba(0,0,0,0)' # Fondo transparente
+    )
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Indicator(
+    mode='gauge',
+    value=0,
+    domain={'x': [0, 1], 'y': [0, 1]},
+    title={'text': "Risk"},
+    gauge={
+        'axis': {'range': [0, 100]},
+        'bar': {'color': "red", 'thickness': 0.75},
+        'steps': [{'range': [i, i + 1], 'color': colors_interpolated[i]} for i in range(num_steps)],
+        'threshold': {
+            'line': {'color': 'black', 'width': 3},
+            'thickness': .75,
+            'value': df['risk_value'].iloc[id]
+        }
+    }
+    ))
+
+    fig.update_layout(layout)
+
+    graph = fig.to_json()
+    return graph
 
 
 
