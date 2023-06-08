@@ -21,39 +21,15 @@ cursor = cnx.cursor()
 def make_query(code):
     cursor.execute(code)
     results = cursor.fetchall()
-    column_names = [desc[0] for desc in cursor.description]  # Obtener los nombres de las columnas
-    df = pd.DataFrame(results, columns=column_names)  # Crear el DataFrame
+    column_names = [desc[0] for desc in cursor.description] 
+    df = pd.DataFrame(results, columns=column_names)  
     return df
 
-# os.chdir(os.path.dirname(__file__))
 app = Flask(__name__)
 app.config['DEBUG'] = True
 CORS(app)
 
-@app.route('/db', methods=['GET'])
-def devolver_tabla():
-    tabla=make_query("SELECT * FROM employee_raw")
-    
-    return tabla
-
-@app.route('/db/query', methods=['GET'])
-def get_db():
-    
-    table = request.args.get("table")
-    requested = request.args
-    items = requested.items()
-    query = [f"SELECT * FROM {table} WHERE "]
-
-    for param, value in items:
-        query.append(f"{param} = '{value }'")
-    
-    result = query[0] + " " + "AND ".join(query[2:])
-    db = make_query(result)
-
-
-    return db
-
-
+# Función que devuelve un json a partir de un gráfico de tarta
 @app.route('/db/graph/pie', methods=['GET'])
 def get_graph_pie():
     df_risk=make_query("""SELECT risk from replacement""")
@@ -73,8 +49,8 @@ def get_graph_pie():
     }
     fig = go.Figure(data=[
         go.Pie(
-            labels=list(count_values.keys()),  # Convert dict_keys to a list
-            values=list(count_values.values()),  # Convert dict_values to a list
+            labels=list(count_values.keys()),  
+            values=list(count_values.values()),  
             hole=0.4,
             pull=[0.05, 0.05, 0.05, 0.05],
             marker=dict(colors=[colors[label] for label in count_values.keys()])
@@ -96,6 +72,7 @@ def get_graph_pie():
     graph=fig.to_json()
     return graph
 
+# Función que devuelve un json a partir de un gráfico de barras en función del riesgo y rol
 @app.route('/db/graph/bar1', methods=['GET'])
 def get_graph_bar1():
     df = make_query("SELECT role, risk FROM replacement")
@@ -142,10 +119,14 @@ def get_graph_bar1():
 
 @app.route('/db/graph/bar2', methods=['GET'])
 def get_graph_bar2():
-
+    '''
+    Endpoint que devuelve un gráfico de barras en función de riesgo
+    y nivel de trabajo a partir de una query a la BD y lo devuelve
+    en formato json
+    '''
     df = make_query("SELECT job_level, risk FROM replacement")
     df_agg = df.groupby(['job_level', 'risk']).size().reset_index(name='count')
-    df_agg['percentage'] = df_agg.groupby('job_level')['count'].apply(lambda x: (x / x.sum()) * 100)
+    df_agg['percentage'] = df_agg.groupby('job_level')['count'].apply(lambda x: (x / x.sum()) * 100) # Agrupación para calcular el porcentaje sobre el total
 
     fig = go.Figure()
 
@@ -185,22 +166,22 @@ def get_graph_bar2():
     graph = fig.to_json()
     return graph
 
-
 @app.route('/db/graph/line', methods=['GET'])
 def get_graph_line():
-
+    '''
+    Endpoint que devuelve un gráfico de líneas de evolución temporal
+    de las predicciones a partir de una query a la BD y lo devuelve
+    en formato json
+    '''
     df=make_query("SELECT months_left FROM replacement")
 
-    # Obtener el conteo de valores para cada categoría en Prediction_nº_Months
     counts = df['months_left'].value_counts().sort_index()
 
-    # Filtrar los valores menores o iguales a 24
-    counts_filtered = counts.loc[counts.index <= 24]
+    counts_filtered = counts.loc[counts.index <= 24] # Filtro para 24 meses
 
-    # Crear la gráfica de series de tiempo
-    fig = px.line(x=counts_filtered.index, y=counts_filtered.values, title="Prediction attrition for next 24 months")
+    fig = px.line(x=counts_filtered.index, y=counts_filtered.values, title="Prediction attrition for next 24 months") # Gráfica de series de tiempo
 
-    fig.update_traces(line_width=3, mode='lines+markers', hovertemplate='Month: %{x}<br>Nº of attrition: %{y}')  # Ajustar el grosor de la línea, agregar marcadores circulares y personalizar etiquetas
+    fig.update_traces(line_width=3, mode='lines+markers', hovertemplate='Month: %{x}<br>Nº of attrition: %{y}')  
 
     fig.update_layout(xaxis=dict(
         tickmode='array',
@@ -212,37 +193,6 @@ def get_graph_line():
     return graph
 
 
-
-@app.route('/db/predict', methods=['GET'])
-def predict():
-
-    table = "current_employees" # Cambiar por predictions
-    # id = request.args.get("id_employee")
-    query = f"SELECT * FROM {table}'"
-
-    db = make_query(query)
-
-    model = pickle.load(open('JP_0606_1_Ridge.pickle','rb')) # Cambiar ruta modelo
-
-    colums_to_drop = ["id_employee", "name", "involvement", "performance", "environment", "satisfaction", "life_balance", "attrition", "travel", "department",
-                     "education", "education_field", "gender", "role", "marital_status", "hours", "department", "years_company"]
-
-    db.drop(columns=colums_to_drop, inplace=True)
-    prediction = model.predict(db)
-
-    return jsonify({'prediction': prediction[0]})
-
-# @app.route('/db/get_prediction', methods=['GET'])
-# def get_prediction():
-
-#     table = "predictions"
-#     id = request.args.get("id_employee")
-#     query = [f"SELECT * FROM {table} WHERE id_employee = '{id}'"]
-
-#     db = make_query(query)
-
-
-#     return jsonify(db)
 
 
 if __name__ == '__main__':
