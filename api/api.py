@@ -240,7 +240,7 @@ def get_graph_gauge():
     # Mapeo para poder presentar el riesgo numéricamente
     risk_mapping = {'Low': 13, 'Medium': 38, 'High': 63, 'Very high':88}
     df['risk_value'] = df['risk'].map(risk_mapping)
-    id=request.args.get("id")
+    id=int(request.args.get("id"))
 
     # Generar colores interpolados para los pasos de la escala continua
     colors_interpolated = [f'rgb({int(255*np.sqrt(i/num_steps))}, {int(255*(1-np.sqrt(i/num_steps)))}, 0)' for i in range(num_steps)]
