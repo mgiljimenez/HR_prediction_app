@@ -1,31 +1,4 @@
 
-// import React, { useState, useEffect } from 'react';
-// import Plot from 'react-plotly.js';
-
-// const Dashboard = () => {
-//     const [plot, setPlot] = useState(0);
-//     const [atrittion, setAtrittion] = useState([]);
-
-//     useEffect(() => {
-//             fetch('https://api-hr-proyect.onrender.com/db/attrition24')
-//           .then(res => res.json())
-//           .then(data => setAtrittion(data));
-//         }, [atrittion]);
-// console.log();
-//     useEffect(() => {
-//       fetch('https://api-hr-proyect.onrender.com/db/graph/bar1').then(res => res.json()).then(data => {setPlot(data);});
-//     }, []);
-    
-//     return (
-//       <div className='content'>
-//       <h1>Current Fund</h1>
-//       <Plot data={plot.data} layout={plot.layout}/>
-//       <h1>Number of Attrition: {atrittion}</h1>
-//       </div>
-//     );
-// };
-
-// export default Dashboard;
 
 import React, { useState, useEffect } from 'react';
 import Plot from 'react-plotly.js';
@@ -52,7 +25,7 @@ const Dashboard = () => {
             fetch('https://api-hr-proyect.onrender.com/db/attrition24')
           .then(res => res.json())
           .then(data => setAtrittion(data));
-        }, [atrittion]);
+        }, []);
 
   return (
     <div className='content'>
