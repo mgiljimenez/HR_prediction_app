@@ -86,9 +86,15 @@ if (event.key === 'Enter') {
           >
             MEDITECH
           </Typography>
-          <Link to="/dashboard">Overview</Link>
-          <Link to="/ranking">Ranking</Link>
-          <Link to="/employee">Employee Profile</Link>
+          <Link 
+          style={{color:'#a8dadc'}}
+          to="/dashboard">Overview</Link>
+          <Link
+          style={{color:'#a8dadc'}}
+          to="/ranking">Ranking</Link>
+          <Link 
+          style={{color:'#a8dadc'}}
+          to="/employee">Employee Profile</Link>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />

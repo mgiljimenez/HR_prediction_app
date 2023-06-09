@@ -8,20 +8,13 @@ function getEndpoint(id) {
 	return !id ? endpoint : endpoint + '/' + id
 }
 
-function getAllworkers() {
+function getAllEmployees() {
 	return http.get(getEndpoint())
 }
 
-function getWorkerById(id) {
-	return http.get(getEndpoint(id))
+const employeeService = {
+	getAllEmployees,
+
 }
 
-
-
-const workersService = {
-	getAllworkers,
-	getWorkerById,
-	
-}
-
-export default workersService
+export default employeeService
