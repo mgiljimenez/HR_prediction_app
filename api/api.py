@@ -208,7 +208,7 @@ def get_graph_line():
 
     counts = df['months_left'].value_counts().sort_index()
 
-    counts_filtered = counts.loc[counts.index <= 24] # Filtro para 24 meses
+    counts_filtered = counts.loc[-10 < counts.index <= 24] # Filtro para 24 meses
 
     fig = px.line(x=counts_filtered.index, y=counts_filtered.values, title="Prediction attrition for next 24 months") # Gráfica de series de tiempo
 
