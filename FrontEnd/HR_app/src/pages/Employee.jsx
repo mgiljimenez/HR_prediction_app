@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Avatar } from "@mui/material";
 import axios from "axios";
 import { DataGrid } from "@mui/x-data-grid";
+import Plot from 'react-plotly.js';
 import {
   TableContainer,
   Table,
@@ -14,7 +15,8 @@ import {
 
 function Employee() {
   const [employees, setEmployees] = useState([]);
-
+  const [plot, setPlot] = useState(0);
+  
   async function test() {
     const res = await axios.get("https://prueba-server.onrender.com/employees");
     setEmployees(res.data);
@@ -22,6 +24,10 @@ function Employee() {
 
   useEffect(() => {
     test();
+  }, []);
+
+  useEffect(() => {
+    fetch('https://api-hr-proyect.onrender.com/db/graph/gauge?id=54').then(res => res.json()).then(data => {setPlot(data);});
   }, []);
 
   function getColorClassName(satisfaction) {
@@ -75,6 +81,8 @@ function Employee() {
               </Avatar>
             </div>
             <div className="leftUp">
+              <p>id: {employee.id_employee}</p>
+
               <p>Name: {employee.name}</p>
               <p>Department: {employee.department}</p>
               <p>Role: {employee.role}</p>
@@ -174,7 +182,8 @@ function Employee() {
               </TableContainer>
             </div>
             <div className="rightDown">
-              <h4>Life Balance : {employee.life_balance}</h4>
+            <Plot data={plot.data} layout={plot.layout}/>
+              {/* <h4>Life Balance : {employee.life_balance}</h4> */}
             </div>
           </div>
         </div>
