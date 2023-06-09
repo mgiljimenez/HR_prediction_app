@@ -1,12 +1,14 @@
 #Importamos la librerías y variables necesarias
 import mysql.connector
 import pandas as pd
-from flask import Flask, jsonify, request
+from flask import Flask, request
 from flask_cors import CORS
-import pickle
 import plotly.graph_objects as go
 import plotly.express as px
+import numpy as np
 
+
+# Conexión a la Base de Datos
 cnx = mysql.connector.connect(
     user="admin",
     password="admin123",
@@ -15,42 +17,40 @@ cnx = mysql.connector.connect(
 )
 cursor = cnx.cursor()
 
-#Definimos una función mediante la que ejecutar las querys devolviendo un dataframe
 def make_query(code):
+    cnx.close()
+    cnx.connect()
+    '''
+    Función principal de la API que permite
+    hacer una query a la BD y devuelve el DF
+    resultante para hacer gráficas
+    
+    La query utiliza como motor MySQL y debe
+    seguir la sintaxis de SQL
+    '''
     cursor.execute(code)
     results = cursor.fetchall()
-    column_names = [desc[0] for desc in cursor.description]  # Obtener los nombres de las columnas
-    df = pd.DataFrame(results, columns=column_names)  # Crear el DataFrame
+    column_names = [desc[0] for desc in cursor.description] 
+    df = pd.DataFrame(results, columns=column_names)
+    
     return df
 
-# os.chdir(os.path.dirname(__file__))
 app = Flask(__name__)
 app.config['DEBUG'] = True
 CORS(app)
 
-@app.route('/db', methods=['GET'])
-def devolver_tabla():
-    tabla=make_query("SELECT * FROM employee_raw")
-    return tabla
-
-@app.route('/db/query', methods=['GET'])
-def get_db():
-    table = request.args.get("table")
-    requested = request.args
-    items = requested.items()
-    query = [f"SELECT * FROM {table} WHERE "]
-    for param, value in items:
-        query.append(f"{param} = '{value }'")
-    result = query[0] + " " + "AND ".join(query[2:])
-    db = make_query(result)
-    return db
-
-
 @app.route('/db/graph/pie', methods=['GET'])
 def get_graph_pie():
+    '''
+    Endpoint que devuelve un gráfico de tarta del
+    reparto del riesgo general en la empresa
+    a partir de una query a la BD y lo devuelve
+    en formato json
+    '''
     df_risk=make_query("""SELECT risk from replacement""")
     count_values = df_risk.value_counts()
 
+    # Estética de la gráfica
     colors = {
         "Low": "#00CC96",
         "Medium": "#B6E880",
@@ -65,8 +65,8 @@ def get_graph_pie():
     }
     fig = go.Figure(data=[
         go.Pie(
-            labels=list(count_values.keys()),  # Convert dict_keys to a list
-            values=list(count_values.values()),  # Convert dict_values to a list
+            labels=list(count_values.keys()),  
+            values=list(count_values.values()),  
             hole=0.4,
             pull=[0.05, 0.05, 0.05, 0.05],
             marker=dict(colors=[colors[label] for label in count_values.keys()])
@@ -83,19 +83,28 @@ def get_graph_pie():
             xanchor="center",
             x=0.5
         ),
-        title_x=0.5
+        width=600,
+        height=400,
+        title_x=0.5,
+        paper_bgcolor='rgba(0,0,0,0)' # Fondo transparente
     )
     graph=fig.to_json()
     return graph
 
 @app.route('/db/graph/bar1', methods=['GET'])
 def get_graph_bar1():
+    '''
+    Endpoint que devuelve un gráfico de barras en función de riesgo
+    y rol a partir de una query a la BD y lo devuelve
+    en formato json
+    '''
     df = make_query("SELECT role, risk FROM replacement")
     df_agg = df.groupby(['role', 'risk']).size().reset_index(name='count')
     df_agg['percentage'] = df_agg.groupby('role')['count'].apply(lambda x: (x / x.sum()) * 100)
 
     fig = go.Figure()
 
+    # Estética de la gráfica
     colors = {
         "Low": "#00CC96",
         "Medium": "#B6E880",
@@ -103,6 +112,7 @@ def get_graph_bar1():
         "Very high": "#EF553B"
     }
 
+    # Barras agrupadas hasta sumar el total del riesgo (100)
     for risk in df_agg['risk'].unique():
         df_filtered = df_agg[df_agg['risk'] == risk]
         fig.add_trace(go.Bar(
@@ -124,9 +134,10 @@ def get_graph_bar1():
         yaxis=dict(title='JobRole'),
         barmode='stack',
         autosize=False,
-        width=800,
-        height=500,
+        width=600,
+        height=400,
         title_x=0.5,
+        paper_bgcolor='rgba(0,0,0,0)' # Fondo transparente
     )
 
     graph = fig.to_json()
@@ -134,13 +145,18 @@ def get_graph_bar1():
 
 @app.route('/db/graph/bar2', methods=['GET'])
 def get_graph_bar2():
-
+    '''
+    Endpoint que devuelve un gráfico de barras en función de riesgo
+    y nivel de trabajo a partir de una query a la BD y lo devuelve
+    en formato json
+    '''
     df = make_query("SELECT job_level, risk FROM replacement")
     df_agg = df.groupby(['job_level', 'risk']).size().reset_index(name='count')
-    df_agg['percentage'] = df_agg.groupby('job_level')['count'].apply(lambda x: (x / x.sum()) * 100)
+    df_agg['percentage'] = df_agg.groupby('job_level')['count'].apply(lambda x: (x / x.sum()) * 100) # Agrupación para calcular el porcentaje sobre el total
 
     fig = go.Figure()
 
+    # Estética de la gráfica
     colors = {
         "Low": "#00CC96",
         "Medium": "#B6E880",
@@ -148,6 +164,7 @@ def get_graph_bar2():
         "Very high": "#EF553B"
     }
 
+    # Barras agrupadas hasta sumar el total del riesgo (100)
     for risk in df_agg['risk'].unique():
         df_filtered = df_agg[df_agg['risk'] == risk]
         fig.add_trace(go.Bar(
@@ -160,6 +177,7 @@ def get_graph_bar2():
             textposition='auto'
         ))
 
+    # Tamaño de figura adaptado a la web
     fig.update_layout(
         title={
             'text': 'Distribution risk attrition by job level',
@@ -169,67 +187,95 @@ def get_graph_bar2():
         yaxis=dict(title='Job Level'),
         barmode='stack',
         autosize=False,
-        width=800,
-        height=500,
+        width=600,
+        height=400,
         title_x=0.5,
+        paper_bgcolor='rgba(0,0,0,0)' # Fondo transparente
     )
 
     graph = fig.to_json()
     return graph
 
-
 @app.route('/db/graph/line', methods=['GET'])
 def get_graph_line():
-
+    '''
+    Endpoint que devuelve un gráfico de líneas de evolución temporal
+    de las predicciones a partir de una query a la BD y lo devuelve
+    en formato json
+    '''
     df=make_query("SELECT months_left FROM replacement")
 
-    # Obtener el conteo de valores para cada categoría en Prediction_nº_Months
     counts = df['months_left'].value_counts().sort_index()
 
-    # Filtrar los valores menores o iguales a 24
-    counts_filtered = counts.loc[counts.index <= 24]
+    counts_filtered = counts.loc[counts.index <= 24] # Filtro para 24 meses
 
-    # Crear la gráfica de series de tiempo
-    fig = px.line(x=counts_filtered.index, y=counts_filtered.values, title="Prediction attrition for next 24 months")
+    fig = px.line(x=counts_filtered.index, y=counts_filtered.values, title="Prediction attrition for next 24 months") # Gráfica de series de tiempo
 
-    fig.update_traces(line_width=3, mode='lines+markers', hovertemplate='Month: %{x}<br>Nº of attrition: %{y}')  # Ajustar el grosor de la línea, agregar marcadores circulares y personalizar etiquetas
+    fig.update_traces(line_width=3, mode='lines+markers', hovertemplate='Month: %{x}<br>Nº of attrition: %{y}')  
 
     fig.update_layout(xaxis=dict(
         tickmode='array',
         tickvals=counts_filtered.index,
         ticktext=counts_filtered.index
-    ), xaxis_title="next 24 months", yaxis_title="Nº of attrition", title_x=0.5, title_font={'size': 24})
+    ), xaxis_title="next 24 months", 
+    yaxis_title="Nº of attrition", 
+    title_x=0.5, 
+    title_font={'size': 24},
+    width=600,
+    height=400)
 
     graph = fig.to_json()
     return graph
 
+@app.route('/db/graph/gauge', methods=['GET'])
+def get_graph_gauge():
+    '''
+    Endpoint que devuelve un gauge chart del riesgo de un ID concreto
+    partir de una query a la BD y lo devuelve en formato json
+    '''
+    num_steps = 100 
 
+    df=make_query("SELECT risk FROM replacement")
 
-@app.route('/db/predict', methods=['GET'])
-def predict():
+    # Mapeo para poder presentar el riesgo numéricamente
+    risk_mapping = {'Low': 13, 'Medium': 38, 'High': 63, 'Very high':88}
+    df['risk_value'] = df['risk'].map(risk_mapping)
+    id=request.args.get("id")
 
-    table = "current_employees" # Cambiar por predictions
-    # id = request.args.get("id_employee")
-    query = f"SELECT * FROM {table}'"
+    # Generar colores interpolados para los pasos de la escala continua
+    colors_interpolated = [f'rgb({int(255*np.sqrt(i/num_steps))}, {int(255*(1-np.sqrt(i/num_steps)))}, 0)' for i in range(num_steps)]
 
-    db = make_query(query)
+    # Tamaño de figura adaptado a la web
+    layout = go.Layout(
+    title='Gauge Chart',
+    width=600,
+    height=400,
+    paper_bgcolor='rgba(0,0,0,0)' # Fondo transparente
+    )
 
-    model = pickle.load(open('JP_0606_1_Ridge.pickle','rb')) # Cambiar ruta modelo
+    fig = go.Figure()
 
-    colums_to_drop = ["id_employee", "name", "involvement", "performance", "environment", "satisfaction", "life_balance", "attrition", "travel", "department",
-                     "education", "education_field", "gender", "role", "marital_status", "hours", "department", "years_company"]
+    fig.add_trace(go.Indicator(
+    mode='gauge',
+    value=0,
+    domain={'x': [0, 1], 'y': [0, 1]},
+    title={'text': "Risk"},
+    gauge={
+        'axis': {'range': [0, 100]},
+        'bar': {'color': "red", 'thickness': 0.75},
+        'steps': [{'range': [i, i + 1], 'color': colors_interpolated[i]} for i in range(num_steps)],
+        'threshold': {
+            'line': {'color': 'black', 'width': 3},
+            'thickness': .75,
+            'value': df['risk_value'].iloc[id]
+        }
+    }
+    ))
 
-    db.drop(columns=colums_to_drop, inplace=True)
-    prediction = model.predict(db)
+    fig.update_layout(layout)
 
-    return jsonify({'prediction': prediction[0]})
+    graph = fig.to_json()
+    return graph
 
-# @app.route('/db/get_prediction', methods=['GET'])
-# def get_prediction():
-#     table = "predictions"
-#     id = request.args.get("id_employee")
-#     query = [f"SELECT * FROM {table} WHERE id_employee = '{id}'"]
-#     db = make_query(query)
-#     return jsonify(db)
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
