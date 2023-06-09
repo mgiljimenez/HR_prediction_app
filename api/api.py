@@ -7,8 +7,6 @@ import pickle
 import plotly.graph_objects as go
 import plotly.express as px
 
-
-
 cnx = mysql.connector.connect(
     user="admin",
     password="admin123",
@@ -33,24 +31,18 @@ CORS(app)
 @app.route('/db', methods=['GET'])
 def devolver_tabla():
     tabla=make_query("SELECT * FROM employee_raw")
-    
     return tabla
 
 @app.route('/db/query', methods=['GET'])
 def get_db():
-    
     table = request.args.get("table")
     requested = request.args
     items = requested.items()
     query = [f"SELECT * FROM {table} WHERE "]
-
     for param, value in items:
         query.append(f"{param} = '{value }'")
-    
     result = query[0] + " " + "AND ".join(query[2:])
     db = make_query(result)
-
-
     return db
 
 
@@ -234,16 +226,10 @@ def predict():
 
 # @app.route('/db/get_prediction', methods=['GET'])
 # def get_prediction():
-
 #     table = "predictions"
 #     id = request.args.get("id_employee")
 #     query = [f"SELECT * FROM {table} WHERE id_employee = '{id}'"]
-
 #     db = make_query(query)
-
-
 #     return jsonify(db)
-
-
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
