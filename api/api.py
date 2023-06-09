@@ -252,7 +252,7 @@ def get_graph_gauge():
     # Tamaño de figura adaptado a la web
     layout = go.Layout(
     title='Gauge Chart',
-    width=600,
+    width=500,
     height=300,
     paper_bgcolor='rgba(0,0,0,0)' # Fondo transparente
     )
@@ -280,7 +280,7 @@ def get_graph_gauge():
         x=0.5, y=0.2,  # Coordenadas en el gráfico (0-1)
         text=text_value,
         showarrow=False,
-        font=dict(size=50)
+        font=dict(size=25)
     )
 
     fig.update_layout(layout)
