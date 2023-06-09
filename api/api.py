@@ -1,7 +1,7 @@
 #Importamos la librerías y variables necesarias
 import mysql.connector
 import pandas as pd
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import plotly.graph_objects as go
 import plotly.express as px
@@ -287,6 +287,25 @@ def get_graph_gauge():
 
     graph = fig.to_json()
     return graph
+
+@app.route('/db/attrition24', methods=['GET'])
+def make_query_json():
+    cnx.close()
+    cnx.connect()
+    '''
+    Función auxiliar que hace una llamada a la BD
+    y devuelve el total de abandonos en 24 meses
+    '''
+
+    query = '''SELECT COUNT(months_left) as total_filas
+    FROM prueba.replacement
+    WHERE months_left < 25
+    AND months_left > -1'''
+    cursor.execute(query)
+    results = cursor.fetchall()
+    
+    
+    return jsonify(results)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
