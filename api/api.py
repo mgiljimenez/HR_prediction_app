@@ -32,6 +32,7 @@ def make_query(code):
     results = cursor.fetchall()
     column_names = [desc[0] for desc in cursor.description] 
     df = pd.DataFrame(results, columns=column_names)
+    cnx.close()
     
     return df
 
@@ -52,10 +53,10 @@ def get_graph_pie():
 
     # Estética de la gráfica
     colors = {
-        "Low": "#00CC96",
-        "Medium": "#B6E880",
-        "High": "#FFA15A",
-        "Very high": "#EF553B"
+        "Low": "#0F9D58",
+        "Medium": '#FFFF00',
+        "High": "#FABC09",
+        "Very high": "#DB4437"
     }
     count_values = {
         "High": 951,
@@ -106,10 +107,10 @@ def get_graph_bar1():
 
     # Estética de la gráfica
     colors = {
-        "Low": "#00CC96",
-        "Medium": "#B6E880",
-        "High": "#FFA15A",
-        "Very high": "#EF553B"
+        "Low": "#0F9D58",
+        "Medium": '#FFFF00',
+        "High": "#FABC09",
+        "Very high": "#DB4437"
     }
 
     # Barras agrupadas hasta sumar el total del riesgo (100)
@@ -158,10 +159,10 @@ def get_graph_bar2():
 
     # Estética de la gráfica
     colors = {
-        "Low": "#00CC96",
-        "Medium": "#B6E880",
-        "High": "#FFA15A",
-        "Very high": "#EF553B"
+        "Low": "#0F9D58",
+        "Medium": '#FFFF00',
+        "High": "#FABC09",
+        "Very high": "#DB4437"
     }
 
     # Barras agrupadas hasta sumar el total del riesgo (100)
@@ -303,7 +304,8 @@ def make_query_json():
     AND months_left > -1'''
     cursor.execute(query)
     results = cursor.fetchall()
-    
+    cnx.close()
+
     
     return jsonify(results)
 
