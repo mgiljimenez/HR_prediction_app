@@ -222,8 +222,8 @@ def get_graph_line():
     yaxis_title="Nº of attrition", 
     title_x=0.5, 
     title_font={'size': 24},
-    width=1000,
-    height=600,
+    width=840,
+    height=420,
     paper_bgcolor='rgba(0,0,0,0)')
 
     graph = fig.to_json()
