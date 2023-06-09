@@ -221,8 +221,9 @@ def get_graph_line():
     yaxis_title="Nº of attrition", 
     title_x=0.5, 
     title_font={'size': 24},
-    width=600,
-    height=400)
+    width=1000,
+    height=600,
+    paper_bgcolor='rgba(0,0,0,0)')
 
     graph = fig.to_json()
     return graph
@@ -235,15 +236,18 @@ def get_graph_gauge():
     '''
     num_steps = 100 
 
-    df=make_query("SELECT risk FROM replacement")
+    df=make_query("SELECT life_balance FROM replacement")
 
     # Mapeo para poder presentar el riesgo numéricamente
-    risk_mapping = {'Low': 13, 'Medium': 38, 'High': 63, 'Very high':88}
-    df['risk_value'] = df['risk'].map(risk_mapping)
+    
+    risk_mapping = {'Bad': 13, 'Good': 38, 'Better': 63, 'Best':88}
+    df['balance_value'] = df['life_balance'].map(risk_mapping)
     id=int(request.args.get("id"))
 
     # Generar colores interpolados para los pasos de la escala continua
     colors_interpolated = [f'rgb({int(255*np.sqrt(i/num_steps))}, {int(255*(1-np.sqrt(i/num_steps)))}, 0)' for i in range(num_steps)]
+    tick_labels = ['Bad', 'Good', 'Better', 'Best']
+    tick_values = [20, 40, 60, 80]
 
     # Tamaño de figura adaptado a la web
     layout = go.Layout(
@@ -254,23 +258,30 @@ def get_graph_gauge():
     )
 
     fig = go.Figure()
-
     fig.add_trace(go.Indicator(
-    mode='gauge',
-    value=0,
-    domain={'x': [0, 1], 'y': [0, 1]},
-    title={'text': "Risk"},
-    gauge={
-        'axis': {'range': [0, 100]},
-        'bar': {'color': "red", 'thickness': 0.75},
-        'steps': [{'range': [i, i + 1], 'color': colors_interpolated[i]} for i in range(num_steps)],
-        'threshold': {
-            'line': {'color': 'black', 'width': 3},
-            'thickness': .75,
-            'value': df['risk_value'].iloc[id]
+        mode='gauge',
+        value=df['balance_value'].iloc[id],
+        domain={'x': [0, 1], 'y': [0, 1]},
+        title={'text': "Work Life Balance"},
+        gauge={
+            'axis': {'range': [0, 100], 'tickmode': 'array', 'tickvals': tick_values,'ticktext':tick_labels},
+            'bar': {'color': 'rgba(0, 0, 0, 0)', 'thickness': 0.75},
+            'steps': [{'range': [i, i + 1], 'color': colors_interpolated[i]} for i in range(num_steps)],
+            'threshold': {
+                'line': {'color': 'black', 'width': 15},
+                'thickness': .75,
+                'value': df['balance_value'].iloc[id]
+            },
+            
         }
-    }
     ))
+    text_value = df['life_balance'].iloc[id]
+    fig.add_annotation(
+        x=0.5, y=0.2,  # Coordenadas en el gráfico (0-1)
+        text=text_value,
+        showarrow=False,
+        font=dict(size=60)
+    )
 
     fig.update_layout(layout)
 
