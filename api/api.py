@@ -252,8 +252,8 @@ def get_graph_gauge():
     # Tamaño de figura adaptado a la web
     layout = go.Layout(
     title='Gauge Chart',
-    width=600,
-    height=400,
+    width=400,
+    height=250,
     paper_bgcolor='rgba(0,0,0,0)' # Fondo transparente
     )
 
