@@ -268,7 +268,7 @@ def get_graph_gauge():
             'bar': {'color': 'rgba(0, 0, 0, 0)', 'thickness': 0.75},
             'steps': [{'range': [i, i + 1], 'color': colors_interpolated[i]} for i in range(num_steps)],
             'threshold': {
-                'line': {'color': 'black', 'width': 15},
+                'line': {'color': 'black', 'width': 5},
                 'thickness': .75,
                 'value': df['balance_value'].iloc[id]
             },
