@@ -4,7 +4,7 @@ function Footer() {
   return (
     <footer>
       <div className="dashboard-container">
-        <p>&copy; 2023 MediTech. Todos los derechos reservados.</p>
+        <p>&copy; 2023 VivaPharma-HR. Empowering Talent.</p>
       </div>
     </footer>
   );

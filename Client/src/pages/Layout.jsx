@@ -12,7 +12,10 @@ function Layout() {
         <br />
    
         <Outlet />
+        <footer>
         <Footer />
+        </footer>
+       
       </div>
     </>
   );
