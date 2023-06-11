@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Avatar } from "@mui/material";
 import axios from "axios";
-import { DataGrid } from "@mui/x-data-grid";
 import Plot from 'react-plotly.js';
+import { FaCoins, FaStopwatch } from "react-icons/fa";
 import {
   TableContainer,
   Table,
@@ -101,8 +101,8 @@ function Employee() {
                 </h4>
               </div>
               <div className="cost-month">
-                <h5>Replacement Cost {employee.replacement_cost}</h5>
-                <h5>Months Left {employee.months_left}</h5>
+                <p><FaCoins style={{width:'35px', height:'35px'}}/>  Replacement Cost {employee.replacement_cost}</p>
+                <p> <FaStopwatch style={{width:'35px', height:'35px'}}/>  Months Left {employee.months_left}</p>
               </div>
             </div>
           </div>
@@ -120,11 +120,11 @@ function Employee() {
                   boxShadow: "8px 8px 10px 0px rgba(29,53,87,1)",
                 }}
               >
-                <Table sx={{ minWidth: 400 }} aria-label="simple table">
+                <Table sx={{ minWidth: 300 }} aria-label="simple table">
                   <TableBody>
                     <TableRow>
                       <TableCell
-                        style={{ color: "#f1faee" }}
+                        style={{ color: "#1d3557" }}
                         component="th"
                         scope="row"
                       >
@@ -137,7 +137,7 @@ function Employee() {
                     </TableRow>
                     <TableRow>
                       <TableCell
-                        style={{ color: "#f1faee" }}
+                        style={{ color: "#1d3557" }}
                         component="th"
                         scope="row"
                       >
@@ -152,7 +152,7 @@ function Employee() {
                     </TableRow>
                     <TableRow>
                       <TableCell
-                        style={{ color: "#f1faee" }}
+                        style={{ color: "#1d3557" }}
                         component="th"
                         scope="row"
                       >
@@ -167,7 +167,7 @@ function Employee() {
                     </TableRow>
                     <TableRow>
                       <TableCell
-                        style={{ color: "#f1faee" }}
+                        style={{ color: "#1d3557" }}
                         component="th"
                         scope="row"
                       >
@@ -183,7 +183,6 @@ function Employee() {
             </div>
             <div className="rightDown">
             <Plot data={plot.data} layout={plot.layout}/>
-              {/* <h4>Life Balance : {employee.life_balance}</h4> */}
             </div>
           </div>
         </div>

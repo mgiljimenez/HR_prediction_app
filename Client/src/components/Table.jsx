@@ -19,7 +19,35 @@ const columns = [
   { field: 'risk', headerName: 'Risk Profile', width: 150 },
   { field: 'job_level', headerName: 'Job Level', width: 150 },
   { field: 'role', headerName: 'Position', width: 150 },
-  { field: 'satisfaction', headerName: 'Job Satisfaction', width: 150 },
+  { field: 'satisfaction', headerName: 'Job Satisfaction', width: 150,
+  renderCell: (params) => {
+    const value = params.value;
+    let backgroundColor  = '';
+
+    switch (value) {
+      case 'Very High':
+          backgroundColor  = '#0F9D58';
+        break;
+      case 'High':
+          backgroundColor  = '#FFFF00';
+        break;
+      case 'Medium':
+          backgroundColor  = '#FABC09';
+        break;
+      case 'Low':
+          backgroundColor  = '#DB4437';
+        break;
+      default:
+          backgroundColor  = 'black';
+        break;
+    }
+
+    return (
+      <div className='dangerTag' style={{ backgroundColor }}>{value}</div>
+    );
+  },
+
+  },
   { field: 'life_balance', headerName: 'Worklife Balance',width: 150,
     renderCell: (params) => {
       const value = params.value;
@@ -27,16 +55,16 @@ const columns = [
 
       switch (value) {
         case 'Best':
-            backgroundColor  = '#f1faee';
+            backgroundColor  = '#0F9D58';
           break;
         case 'Better':
-            backgroundColor  = '#457b9d';
+            backgroundColor  = '#FFFF00';
           break;
         case 'Good':
-            backgroundColor  = '#1d3557';
+            backgroundColor  = '#FABC09';
           break;
         case 'Bad':
-            backgroundColor  = '#e63946';
+            backgroundColor  = '#DB4437';
           break;
         default:
             backgroundColor  = 'black';
@@ -55,7 +83,6 @@ export default function Table() {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    // Lógica para obtener los datos de la base de datos o de una API
     fetch('https://prueba-server.onrender.com/employees')
       .then(response => response.json())
       .then(data => {
@@ -64,11 +91,11 @@ export default function Table() {
       })
       .catch(error => console.log(error));
   }, []);
-  
 
   return (
     <div style={{ height: 500, width: '100%' }}>
-      <DataGrid rows={rows} columns={columns} pageSize={5} />
+      <DataGrid rows={rows} columns={columns} pageSize={5} className="custom-table"/>
     </div>
   );
+  
 }
