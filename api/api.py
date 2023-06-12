@@ -416,7 +416,7 @@ def try_token():
     api_value = request.headers
     # api_key = api_value["token"]
 
-    return jsonify(api_value)
+    return api_value.to_json()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
