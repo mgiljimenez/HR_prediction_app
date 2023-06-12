@@ -80,6 +80,8 @@ router.post('/signin', bodyParser.json(), validateSigninData, async (req, res) =
     const token = jwt.sign({ email: user.email }, process.env['jwt_privateKey']); // Cambia 'secretKey' a tu clave secreta
 
     res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
     res.setHeader('access-control-expose-headers', 'x-auth-token');
     res.setHeader('x-auth-token', token).json({ message: 'Inicio de sesión exitoso' });
   } catch (error) {
