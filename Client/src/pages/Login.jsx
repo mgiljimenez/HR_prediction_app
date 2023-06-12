@@ -9,26 +9,29 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = (data) => {
-    console.log('hola, soy login');
+    console.log("hola, soy login");
     console.log(data);
     // authService.login(data).then((decodedToken) => {
     //   dispatch({ type: "LOGIN", payload: decodedToken });
-      navigate("/dashboard");
+    navigate("/dashboard");
     // });
   };
 
   return (
-    <div className="Container">
+    <div className="ContainerLogin">
       <div className="loginContainer">
-        <Form
-          header={"Iniciar Sesión"}
-          inputs={[
-            { name: "email", label: "Email" },
-            { name: "password", label: "Password", type: "password" },
-          ]}
-          submitLabel="Iniciar"
-          onSubmit={handleLogin}
-        />
+        <div className="loginImage"></div>
+        <div className="loginForm">
+          <Form
+            header={"Iniciar Sesión"}
+            inputs={[
+              { name: "email", label: "Email" },
+              { name: "password", label: "Password", type: "password" },
+            ]}
+            submitLabel="Iniciar"
+            onSubmit={handleLogin}
+          />
+        </div>
       </div>
     </div>
   );

@@ -9,19 +9,24 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       const response1 = await fetch(
-        "https://api-hr-proyect.onrender.com/db/graph/line"
+        // "https://api-hr-proyect.onrender.com/db/graph/line"
+        "https://api-hr-proyect.onrender.com/db/graph/line?apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250cmFzZW5hIjoieXRmaGd2bWJqbmt5MzRnNiJ9.pMUu_n_2Mx7FPr5LjxpCb2y3jokKzDpHOsTc59eUfec"
       );
       const data1 = await response1.json();
       const response2 = await fetch(
-        "https://api-hr-proyect.onrender.com/db/graph/pie"
+        // "https://api-hr-proyect.onrender.com/db/graph/pie"
+        "https://api-hr-proyect.onrender.com/db/graph/pie?apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250cmFzZW5hIjoieXRmaGd2bWJqbmt5MzRnNiJ9.pMUu_n_2Mx7FPr5LjxpCb2y3jokKzDpHOsTc59eUfec"
       );
       const data2 = await response2.json();
       const response3 = await fetch(
-        "https://api-hr-proyect.onrender.com/db/graph/bar1"
+        // "https://api-hr-proyect.onrender.com/db/graph/bar1"
+        "https://api-hr-proyect.onrender.com/db/graph/bar1?apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250cmFzZW5hIjoieXRmaGd2bWJqbmt5MzRnNiJ9.pMUu_n_2Mx7FPr5LjxpCb2y3jokKzDpHOsTc59eUfec"
       );
       const data3 = await response3.json();
       const response4 = await fetch(
-        "https://api-hr-proyect.onrender.com/db/graph/bar2"
+        // "https://api-hr-proyect.onrender.com/db/graph/bar2"
+        "https://api-hr-proyect.onrender.com/db/graph/bar2?apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250cmFzZW5hIjoieXRmaGd2bWJqbmt5MzRnNiJ9.pMUu_n_2Mx7FPr5LjxpCb2y3jokKzDpHOsTc59eUfec"
+        
       );
       const data4 = await response4.json();
       setPlots([data1, data2, data3, data4]);
@@ -30,7 +35,7 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    fetch("https://api-hr-proyect.onrender.com/db/attrition24")
+    fetch("https://api-hr-proyect.onrender.com/db/attrition24?apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250cmFzZW5hIjoieXRmaGd2bWJqbmt5MzRnNiJ9.pMUu_n_2Mx7FPr5LjxpCb2y3jokKzDpHOsTc59eUfec")
       .then((res) => res.json())
       .then((data) => setAtrittion(data));
   }, []);
@@ -53,7 +58,13 @@ const Dashboard = () => {
         <div className="graph" key={index + 1}>
           <Plot data={plot.data} layout={plot.layout} />
         </div>
+
+        
       ))}
+      <div>
+        <button>TRAINING MODEL</button>
+        <button>NEW PREDICTION</button>
+      </div>
     </div>
   );
 };

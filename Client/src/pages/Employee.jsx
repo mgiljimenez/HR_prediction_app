@@ -3,6 +3,7 @@ import { Avatar } from "@mui/material";
 import axios from "axios";
 import Plot from 'react-plotly.js';
 import { FaCoins, FaStopwatch } from "react-icons/fa";
+import { useParams } from "react-router-dom";
 import {
   TableContainer,
   Table,
@@ -16,18 +17,23 @@ import {
 function Employee() {
   const [employees, setEmployees] = useState([]);
   const [plot, setPlot] = useState(0);
-  
+  // const [searchParams, setSearchParams] = useSearchParams();
+  let { id } = useParams();
+
+
   async function test() {
-    const res = await axios.get("https://prueba-server.onrender.com/employees");
-    setEmployees(res.data);
+    const res = await axios.get(`https://prueba-server.onrender.com/employees/${id}`);
+    setEmployees(res.data);console.log(data);
   }
+  
+  function chartFunction() {
+    fetch(`https://api-hr-proyect.onrender.com/db/graph/gauge?id=${id}&apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250cmFzZW5hIjoieXRmaGd2bWJqbmt5MzRnNiJ9.pMUu_n_2Mx7FPr5LjxpCb2y3jokKzDpHOsTc59eUfec`).then(res => res.json()).then(data => {setPlot(data);});
+  }
+
 
   useEffect(() => {
     test();
-  }, []);
-
-  useEffect(() => {
-    fetch('https://api-hr-proyect.onrender.com/db/graph/gauge?id=54').then(res => res.json()).then(data => {setPlot(data);});
+    chartFunction()
   }, []);
 
   function getColorClassName(satisfaction) {
@@ -81,11 +87,11 @@ function Employee() {
               </Avatar>
             </div>
             <div className="leftUp">
-              <p>id: {employee.id_employee}</p>
+              <p>id: {employee.id_employee  }</p>
 
-              <p>Name: {employee.name}</p>
-              <p>Department: {employee.department}</p>
-              <p>Role: {employee.role}</p>
+              <p>{employee.name}</p>
+              <p>{employee.department}</p>
+              <p>{employee.role}</p>
               <p>Job Level: {employee.job_level}</p>
               <p>Education: {employee.education}</p>
             </div>
@@ -96,13 +102,14 @@ function Employee() {
                   <span>{employee.risk}</span>
                 </h4>
                 <h4 className="month">
-                  PREDICTION (MONTHS) <br />
-                  <span>{employee.replacement_month}</span>
+                   <br />
+                  <span>Months Left {employee.months_left}</span>
                 </h4>
               </div>
               <div className="cost-month">
+                /// Añadir símbolo de la moneda
                 <p><FaCoins style={{width:'35px', height:'35px'}}/>  Replacement Cost {employee.replacement_cost}</p>
-                <p> <FaStopwatch style={{width:'35px', height:'35px'}}/>  Months Left {employee.months_left}</p>
+                <p> <FaStopwatch style={{width:'35px', height:'35px'}}/> Worklife Balance  {employee.replacement_month}</p>
               </div>
             </div>
           </div>
@@ -188,6 +195,9 @@ function Employee() {
         </div>
       ))}
     </div>
+         
+
   );
+
 }
 export default Employee;

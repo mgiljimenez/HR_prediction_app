@@ -9,19 +9,20 @@ import Ranking from "./pages/Ranking";
 
 const router = createBrowserRouter([
   {
+    path: "/login",
+    element: <Login />,
+    errorElement: <ErrorPage />,
+  },
+  {
     path: "/",
     element: <Layout />,
     errorElement: <ErrorPage />,
     children: [
-      { path: "/employee", element: <Employee /> },
+      { path: "/employee", element: <Employee /> }, 
       { path: "/dashboard", element: <Dashboard /> },
       { path: "/ranking", element: <Ranking /> },
+      {path:"/employee/:id", element: <Employee  />},
     ],
-  },
-  {
-    path: "/login",
-    element: <Login />,
-    errorElement: <ErrorPage />,
   },
 ]);
 

@@ -8,9 +8,9 @@ const columns = [
     renderCell: (params) => {
       const employeeId = params.row.id_employee;
       const employeeName = params.value;
-  
       return (
         <Link to={`/employee/${employeeId}`}>{employeeName}</Link>
+
       );
     },
   },
