@@ -9,6 +9,7 @@ import numpy as np
 from dotenv import load_dotenv
 import os
 import jwt
+import pickle 
 
 load_dotenv()
 private_key = os.getenv("private_key")
@@ -368,5 +369,54 @@ def make_query_json():
             return abort(401)
     except:
         return abort(401)
+
+# @app.route('/db/retrain', methods=['GET'])
+# def retrain():
+#     cnx.close()
+#     cnx.connect()
+#     '''
+#     Función auxiliar que hace una llamada a la BD
+#     y devuelve el salario de un ID concreto
+#     '''
+#     api_key=request.args.get("apikey")
+#     try:
+#         if jwt.decode(api_key,private_key,algorithms=["HS256"]) == key_desencriptado:
+#             # CODIGO DE ENTRENAR
+#             return jsonify(results)
+#         else:
+#             return abort(401)
+#     except:
+#         return abort(401)
+
+# @app.route('/db/nprediction', methods=['GET'])
+# def new_prediction():
+#     cnx.close()
+#     cnx.connect()
+#     '''
+#     Función auxiliar que hace una llamada a la BD
+#     y devuelve el salario de un ID concreto
+#     '''
+#     api_key=request.args.get("apikey")
+#     try:
+#         if jwt.decode(api_key,private_key,algorithms=["HS256"]) == key_desencriptado:
+#             model = pickle.load(open('./../Data/Models/model.pkl', 'rb'))
+#             new_value = model.predict()
+#             query= f'''
+#             UPDATE replacement SET months_left = {new_value} WHERE 1;
+#             '''
+#             make_query(query)
+            
+#         else:
+#             return abort(401)
+#     except:
+#         return abort(401)
+@app.route('/db/trytoken', methods=['GET'])
+def try_token():
+
+    api_value = request.args
+    api_key = api_value["token"]
+
+    return jsonify(api_key)
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
