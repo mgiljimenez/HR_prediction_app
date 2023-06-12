@@ -22,18 +22,23 @@ cnx = mysql.connector.connect(
     host="test-db.cze2nnbbx5pc.eu-west-3.rds.amazonaws.com",
     database="prueba"
 )
-cursor = cnx.cursor()
 
 def make_query(code):
-    try:
-        cnx.close()
-    except:
-        pass
+    cursor = cnx.cursor()
     try:
         cnx.connect()
+        cursor.execute(code)
+        results = cursor.fetchall()
+        column_names = [desc[0] for desc in cursor.description] 
+        df = pd.DataFrame(results, columns=column_names)
     except:
         return "Error conexion 1"
-    '''
+    
+    finally:
+        cursor.close()
+        cnx.close()
+        return df
+        '''
     Función principal de la API que permite
     hacer una query a la BD y devuelve el DF
     resultante para hacer gráficas
@@ -41,22 +46,6 @@ def make_query(code):
     La query utiliza como motor MySQL y debe
     seguir la sintaxis de SQL
     '''
-    try:
-        cursor.execute(code)
-    except:
-        return "Error execute"
-    try:
-        results = cursor.fetchall()
-    except:
-        return "Error fetchall"
-    column_names = [desc[0] for desc in cursor.description] 
-    df = pd.DataFrame(results, columns=column_names)
-    try:
-        cursor.close()
-        cnx.close()
-    except:
-        return "Error close 2"
-    return df
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
