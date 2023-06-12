@@ -417,7 +417,7 @@ def try_token():
     # api_key = api_value["token"]
     #
 
-    return api_value
+    return print(api_value)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
