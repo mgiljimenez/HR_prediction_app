@@ -29,7 +29,10 @@ def make_query(code):
         cnx.close()
     except:
         pass
-    cnx.connect()
+    try:
+        cnx.connect()
+    except:
+        return "Error conexion 1"
     '''
     Función principal de la API que permite
     hacer una query a la BD y devuelve el DF
@@ -38,11 +41,21 @@ def make_query(code):
     La query utiliza como motor MySQL y debe
     seguir la sintaxis de SQL
     '''
-    cursor.execute(code)
-    results = cursor.fetchall()
+    try:
+        cursor.execute(code)
+    except:
+        return "Error execute"
+    try:
+        results = cursor.fetchall()
+    except:
+        return "Error fetchall"
     column_names = [desc[0] for desc in cursor.description] 
     df = pd.DataFrame(results, columns=column_names)
-    cnx.close()
+    try:
+        cursor.close()
+        cnx.close()
+    except:
+        return "Error close 2"
     return df
 
 app = Flask(__name__)
@@ -183,7 +196,6 @@ def get_graph_bar2():
     '''
     api_key=request.args.get("apikey")
     try:
-        return api_key
         if jwt.decode(api_key,private_key,algorithms=["HS256"]) == key_desencriptado:
             df = make_query("SELECT job_level, risk FROM replacement")
             df_agg = df.groupby(['job_level', 'risk']).size().reset_index(name='count')
