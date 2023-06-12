@@ -1,15 +1,10 @@
+
 import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
 
 const Dashboard = () => {
   const [plots, setPlots] = useState([]);
   const [atrittion, setAtrittion] = useState([]);
-  const [data, setData] = useState([]);
-
-  fetch("https://api-hr-proyect.onrender.com/db/trytoken")
-    .then((res) => res.json())
- .then((data) => setData(data));
-  console.log(data);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,6 +26,7 @@ const Dashboard = () => {
       const response4 = await fetch(
         // "https://api-hr-proyect.onrender.com/db/graph/bar2"
         "https://api-hr-proyect.onrender.com/db/graph/bar2?apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250cmFzZW5hIjoieXRmaGd2bWJqbmt5MzRnNiJ9.pMUu_n_2Mx7FPr5LjxpCb2y3jokKzDpHOsTc59eUfec"
+        
       );
       const data4 = await response4.json();
       setPlots([data1, data2, data3, data4]);
@@ -39,9 +35,7 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    fetch(
-      "https://api-hr-proyect.onrender.com/db/attrition24?apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250cmFzZW5hIjoieXRmaGd2bWJqbmt5MzRnNiJ9.pMUu_n_2Mx7FPr5LjxpCb2y3jokKzDpHOsTc59eUfec"
-    )
+    fetch("https://api-hr-proyect.onrender.com/db/attrition24?apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250cmFzZW5hIjoieXRmaGd2bWJqbmt5MzRnNiJ9.pMUu_n_2Mx7FPr5LjxpCb2y3jokKzDpHOsTc59eUfec")
       .then((res) => res.json())
       .then((data) => setAtrittion(data));
   }, []);
@@ -64,6 +58,8 @@ const Dashboard = () => {
         <div className="graph" key={index + 1}>
           <Plot data={plot.data} layout={plot.layout} />
         </div>
+
+        
       ))}
       <div>
         <button>TRAINING MODEL</button>
