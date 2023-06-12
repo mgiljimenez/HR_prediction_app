@@ -39,7 +39,6 @@ def make_query(code):
     column_names = [desc[0] for desc in cursor.description] 
     df = pd.DataFrame(results, columns=column_names)
     cnx.close()
-    
     return df
 
 app = Flask(__name__)
@@ -59,7 +58,6 @@ def get_graph_pie():
         if jwt.decode(api_key,private_key,algorithms=["HS256"]) == key_desencriptado:
             df_risk=make_query("""SELECT risk from replacement""")
             count_values = df_risk.value_counts()
-
             # Estética de la gráfica
             colors = {
                 "Low": "#0F9D58",
@@ -109,7 +107,6 @@ def get_graph_pie():
             return abort(401)
     except:
         return abort(401)
-
 @app.route('/db/graph/bar1', methods=['GET'])
 def get_graph_bar1():
     '''
@@ -125,7 +122,6 @@ def get_graph_bar1():
             df_agg['percentage'] = df_agg.groupby('role')['count'].apply(lambda x: (x / x.sum()) * 100)
 
             fig = go.Figure()
-
             # Estética de la gráfica
             colors = {
                 "Low": "#0F9D58",
@@ -133,7 +129,6 @@ def get_graph_bar1():
                 "High": "#FABC09",
                 "Very high": "#DB4437"
             }
-
             x_order = ["Low", "Medium", "High", "Very high"]
             # Barras agrupadas hasta sumar el total del riesgo (100)
             for risk in x_order:
@@ -190,7 +185,6 @@ def get_graph_bar2():
             df_agg['percentage'] = df_agg.groupby('job_level')['count'].apply(lambda x: (x / x.sum()) * 100) # Agrupación para calcular el porcentaje sobre el total
 
             fig = go.Figure()
-
             # Estética de la gráfica
             colors = {
                 "Low": "#0F9D58",
@@ -198,7 +192,6 @@ def get_graph_bar2():
                 "High": "#FABC09",
                 "Very high": "#DB4437"
             }
-
             x_order = ["Low", "Medium", "High", "Very high"]
             # Barras agrupadas hasta sumar el total del riesgo (100)
             for risk in x_order:
@@ -253,9 +246,7 @@ def get_graph_line():
             df=make_query("SELECT months_left FROM replacement")
 
             counts = df['months_left'].value_counts().sort_index()
-
             counts_filtered = counts.loc[counts.index <= -300] # Filtro para 24 meses
-
             fig = px.line(x=counts_filtered.index, y=counts_filtered.values, title="Prediction attrition for next 24 months") # Gráfica de series de tiempo
 
             fig.update_traces(line_width=3, mode='lines+markers', hovertemplate='Month: %{x}<br>Nº of attrition: %{y}')  
@@ -276,7 +267,6 @@ def get_graph_line():
             title_font_family="Roboto",
             title_font_color="#1D3557",
             legend_title_font_color="#1D3557")
-
             graph = fig.to_json()
             return graph
         else:
@@ -372,14 +362,11 @@ def make_query_json():
             AND months_left > -1'''
             cursor.execute(query)
             results = cursor.fetchall()
-            cnx.close()
-
-            
+            cnx.close()            
             return jsonify(results)
         else:
             return abort(401)
     except:
         return abort(401)
-
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
