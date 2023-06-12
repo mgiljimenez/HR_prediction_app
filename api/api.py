@@ -327,56 +327,57 @@ def get_graph_bar2():
         cursor = connection.cursor()
         cursor.execute("SELECT job_level, risk FROM replacement")
         resultado = cursor.fetchall()
-        column_names = [desc[0] for desc in cursor.description] 
-        df = pd.DataFrame(resultado, columns=column_names)
-        df_agg = df.groupby(['job_level', 'risk']).size().reset_index(name='count')
-        df_agg['percentage'] = df_agg.groupby('job_level')['count'].apply(lambda x: (x / x.sum()) * 100) # Agrupación para calcular el porcentaje sobre el total
+        # column_names = [desc[0] for desc in cursor.description] 
+        # df = pd.DataFrame(resultado, columns=column_names)
+        # df_agg = df.groupby(['job_level', 'risk']).size().reset_index(name='count')
+        # df_agg['percentage'] = df_agg.groupby('job_level')['count'].apply(lambda x: (x / x.sum()) * 100) # Agrupación para calcular el porcentaje sobre el total
 
-        fig = go.Figure()
-        # Estética de la gráfica
-        colors = {
-            "Low": "#0F9D58",
-            "Medium": '#FFFF00',
-            "High": "#FABC09",
-            "Very high": "#DB4437"
-        }
-        x_order = ["Low", "Medium", "High", "Very high"]
-        # Barras agrupadas hasta sumar el total del riesgo (100)
-        for risk in x_order:
-            df_filtered = df_agg[df_agg['risk'] == risk]
-            fig.add_trace(go.Bar(
-                x=df_filtered['percentage'],
-                y=df_filtered['job_level'],
-                name=risk,
-                orientation='h',
-                marker=dict(color=colors[risk]),
-                text=df_filtered['percentage'].apply(lambda x: f"{x:.2f}%"),
-                textposition='auto'
-            ))
+        # fig = go.Figure()
+        # # Estética de la gráfica
+        # colors = {
+        #     "Low": "#0F9D58",
+        #     "Medium": '#FFFF00',
+        #     "High": "#FABC09",
+        #     "Very high": "#DB4437"
+        # }
+        # x_order = ["Low", "Medium", "High", "Very high"]
+        # # Barras agrupadas hasta sumar el total del riesgo (100)
+        # for risk in x_order:
+        #     df_filtered = df_agg[df_agg['risk'] == risk]
+        #     fig.add_trace(go.Bar(
+        #         x=df_filtered['percentage'],
+        #         y=df_filtered['job_level'],
+        #         name=risk,
+        #         orientation='h',
+        #         marker=dict(color=colors[risk]),
+        #         text=df_filtered['percentage'].apply(lambda x: f"{x:.2f}%"),
+        #         textposition='auto'
+        #     ))
 
-        # Tamaño de figura adaptado a la web
-        fig.update_layout(
-            title={
-                'text': 'Distribution risk attrition by job level',
-                'font': {'size': 24}
-            },
-            xaxis=dict(title=''),
-            yaxis=dict(title='Job Level'),
-            barmode='stack',
-            autosize=False,
-            width=600,
-            height=400,
-            title_x=0.5,
-            paper_bgcolor='rgba(0,0,0,0)', # Fondo transparente
-            font_family="Roboto",
-            font_color="#1D3557",
-            title_font_family="Roboto",
-            title_font_color="#1D3557",
-            legend_title_font_color="#1D3557"
-        )
+        # # Tamaño de figura adaptado a la web
+        # fig.update_layout(
+        #     title={
+        #         'text': 'Distribution risk attrition by job level',
+        #         'font': {'size': 24}
+        #     },
+        #     xaxis=dict(title=''),
+        #     yaxis=dict(title='Job Level'),
+        #     barmode='stack',
+        #     autosize=False,
+        #     width=600,
+        #     height=400,
+        #     title_x=0.5,
+        #     paper_bgcolor='rgba(0,0,0,0)', # Fondo transparente
+        #     font_family="Roboto",
+        #     font_color="#1D3557",
+        #     title_font_family="Roboto",
+        #     title_font_color="#1D3557",
+        #     legend_title_font_color="#1D3557"
+        # )
 
-        graph = fig.to_json()
-        return graph
+        # graph = fig.to_json()
+        # return graph
+        return resultado.to_json()
         
     except Exception as error:
         print("Error al obtener los usuarios de la base de datos: {}".format(error))
