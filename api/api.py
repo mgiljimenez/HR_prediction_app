@@ -23,29 +23,29 @@ cnx = mysql.connector.connect(
     database="prueba"
 )
 
-def make_query(code):
-    cursor = cnx.cursor()
-    try:
-        cnx.connect()
-        cursor.execute(code)
-        results = cursor.fetchall()
-        column_names = [desc[0] for desc in cursor.description] 
-        df = pd.DataFrame(results, columns=column_names)
-    except:
-        return "Error conexion 1"
+# def make_query(code):
+#     cursor = cnx.cursor()
+#     try:
+#         cnx.connect()
+#         cursor.execute(code)
+#         results = cursor.fetchall()
+#         column_names = [desc[0] for desc in cursor.description] 
+#         df = pd.DataFrame(results, columns=column_names)
+#     except:
+#         return "Error conexion 1"
     
-    finally:
-        cursor.close()
-        cnx.close()
-        return df
-        '''
-    Función principal de la API que permite
-    hacer una query a la BD y devuelve el DF
-    resultante para hacer gráficas
+#     finally:
+#         cursor.close()
+#         cnx.close()
+#         return df
+    #     '''
+    # Función principal de la API que permite
+    # hacer una query a la BD y devuelve el DF
+    # resultante para hacer gráficas
     
-    La query utiliza como motor MySQL y debe
-    seguir la sintaxis de SQL
-    '''
+    # La query utiliza como motor MySQL y debe
+    # seguir la sintaxis de SQL
+    # '''
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -272,10 +272,16 @@ def get_graph_line():
         #     legend_title_font_color="#1D3557")
         #     graph = fig.to_json()
         #     return graph
-        df=make_query("SELECT months_left FROM replacement")
+        cursor = cnx.cursor()
+        cursor.execute("SELECT months_left FROM replacement")
+        resultado = cursor.fetchall()
+        column_names = [desc[0] for desc in cursor.description] 
+        df = pd.DataFrame(resultado, columns=column_names)
+
         return df.to_json()
     except:
         return abort(500)
+
 
 @app.route('/db/graph/gauge', methods=['GET'])
 def get_graph_gauge():
