@@ -247,7 +247,7 @@ def get_graph_line():
     '''
     api_key=request.args.get("apikey")
     try:
-        if jwt.decode(api_key,private_key,algorithms=["HS256"]) == key_desencriptado:
+        # if jwt.decode(api_key,private_key,algorithms=["HS256"]) == key_desencriptado:
             df=make_query("SELECT months_left FROM replacement")
 
             counts = df['months_left'].value_counts().sort_index()
@@ -274,10 +274,10 @@ def get_graph_line():
             legend_title_font_color="#1D3557")
             graph = fig.to_json()
             return graph
-        else:
-            return "Patata"
+        # else:
+        #     return abort(401)
     except:
-        return abort(401)
+        return abort(500)
 
 @app.route('/db/graph/gauge', methods=['GET'])
 def get_graph_gauge():
