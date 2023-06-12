@@ -24,7 +24,10 @@ cnx = mysql.connector.connect(
 cursor = cnx.cursor()
 
 def make_query(code):
-    cnx.close()
+    try:
+        cnx.close()
+    except:
+        pass
     cnx.connect()
     '''
     Función principal de la API que permite
@@ -179,6 +182,7 @@ def get_graph_bar2():
     '''
     api_key=request.args.get("apikey")
     try:
+        return api_key
         if jwt.decode(api_key,private_key,algorithms=["HS256"]) == key_desencriptado:
             df = make_query("SELECT job_level, risk FROM replacement")
             df_agg = df.groupby(['job_level', 'risk']).size().reset_index(name='count')
