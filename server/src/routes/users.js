@@ -5,8 +5,6 @@ const pool = require("../mysqlPool");
 const jwt = require("jsonwebtoken");
 const { body, validationResult } = require("express-validator");
 const bodyParser = require("body-parser");
-const isAdmin = require("../middlewares/isAdmin");
-const isAuth = require("../middlewares/isAuth");
 
 // Validación de datos para la ruta '/signup'
 const validateSignupData = [
@@ -43,9 +41,9 @@ router.post("/signup", bodyParser.json(), validateSignupData, async (req, res) =
       email,
     };
 
-    const token = jwt.sign(newUser, process.env['jwt_privateKey']); // Cambia 'secretKey' a tu clave secreta
+    const token = jwt.sign(newUser, process.env.jwt_privateKey);
 
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("access-control-expose-headers", "x-auth-token");
     res.setHeader("x-auth-token", token).json(newUser);
   } catch (error) {
@@ -55,7 +53,7 @@ router.post("/signup", bodyParser.json(), validateSignupData, async (req, res) =
 });
 
 // SIGNIN
-router.post('/signin', bodyParser.json(), validateSigninData, async (req, res) => {
+router.post("/signin", bodyParser.json(), validateSigninData, async (req, res) => {
   const { email, password: passwordPlainText } = req.body;
 
   const errors = validationResult(req);
@@ -64,29 +62,31 @@ router.post('/signin', bodyParser.json(), validateSigninData, async (req, res) =
   }
 
   try {
-    const [rows] = await pool.query('SELECT * FROM prueba.registro WHERE email = ?', [email]);
+    const [rows] = await pool.query("SELECT * FROM prueba.registro WHERE email = ?", [email]);
 
     const user = rows[0];
 
     if (!user) {
-      return res.status(401).json({ message: 'Usuario o contraseña incorrecta' });
+      return res.status(401).json({ message: "Usuario o contraseña incorrecta" });
     }
 
     const isUser = await bcrypt.compare(passwordPlainText, user.contrasena);
     if (!isUser) {
-      return res.status(401).json({ message: 'Usuario o contraseña incorrecta' });
+      return res.status(401).json({ message: "Usuario o contraseña incorrecta" });
     }
 
-    const token = jwt.sign({ email: user.email }, process.env['jwt_privateKey']); // Cambia 'secretKey' a tu clave secreta
+    const token = jwt.sign({ email: user.email }, process.env.jwt_privateKey);
 
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
-    res.setHeader('access-control-expose-headers', 'x-auth-token');
-    res.setHeader('x-auth-token', token).json({ message: 'Inicio de sesión exitoso' });
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, X-Auth-Token");
+    res.setHeader("Access-Control-Expose-Headers", "X-Auth-Token");
+    res.setHeader("x-auth-token", token);
+
+    res.json({ message: "Inicio de sesión exitoso" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error en el inicio de sesión' });
+    res.status(500).json({ message: "Error en el inicio de sesión" });
   }
 });
 
