@@ -47,6 +47,19 @@ router.get("/name/:name", async (req, res) => {
     res.setHeader('Access-Control-Allow-Origin','*').json(rows);
   });
 
+  //GET BY NUMBER OF ATTRITION FOR NEXT 24 MONTHS
+  router.get("/attrition", async (req, res) => {
+    try {
+      const sql = "SELECT COUNT(months_left) AS total_filas FROM replacement WHERE months_left < 25 AND months_left > -1";
+      const [rows, fields] = await pool.query(sql);
+      console.log(rows[0]);
+      const attrition = rows[0].total_filas;
+      res.setHeader('Access-Control-Allow-Origin', '*').json(attrition);
+    } catch (error) {
+      res.status(500).json({ error: "Error en la consulta" });
+    }
+  });
+
 
 
 module.exports = router;
