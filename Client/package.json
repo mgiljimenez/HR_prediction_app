@@ -22,7 +22,11 @@
     "@mui/x-data-grid": "^6.6.0",
     "axios": "^1.4.0",
     "icons": "^1.0.0",
+<<<<<<< HEAD
+    "jsonwebtoken": "^9.0.0",
+=======
     "framer-motion": "^10.12.16",
+>>>>>>> 6e953310f45bfae4bf3de2b858a3a3d878e89af9
     "plotly": "^1.0.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
