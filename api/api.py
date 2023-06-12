@@ -9,6 +9,7 @@ import numpy as np
 from dotenv import load_dotenv
 import os
 import jwt
+import pickle 
 
 load_dotenv()
 private_key = os.getenv("private_key")
@@ -250,7 +251,7 @@ def get_graph_line():
             df=make_query("SELECT months_left FROM replacement")
 
             counts = df['months_left'].value_counts().sort_index()
-            counts_filtered = counts.loc[counts.index <= -300] # Filtro para 24 meses
+            counts_filtered = counts.loc[counts.index <= 24] # Filtro para 24 meses
             fig = px.line(x=counts_filtered.index, y=counts_filtered.values, title="Prediction attrition for next 24 months") # Gráfica de series de tiempo
 
             fig.update_traces(line_width=3, mode='lines+markers', hovertemplate='Month: %{x}<br>Nº of attrition: %{y}')  
@@ -274,7 +275,7 @@ def get_graph_line():
             graph = fig.to_json()
             return graph
         else:
-            return abort(401)
+            return "Patata"
     except:
         return abort(401)
 
@@ -372,5 +373,55 @@ def make_query_json():
             return abort(401)
     except:
         return abort(401)
+
+# @app.route('/db/retrain', methods=['GET'])
+# def retrain():
+#     cnx.close()
+#     cnx.connect()
+#     '''
+#     Función auxiliar que hace una llamada a la BD
+#     y devuelve el salario de un ID concreto
+#     '''
+#     api_key=request.args.get("apikey")
+#     try:
+#         if jwt.decode(api_key,private_key,algorithms=["HS256"]) == key_desencriptado:
+#             # CODIGO DE ENTRENAR
+#             return jsonify(results)
+#         else:
+#             return abort(401)
+#     except:
+#         return abort(401)
+
+# @app.route('/db/nprediction', methods=['GET'])
+# def new_prediction():
+#     cnx.close()
+#     cnx.connect()
+#     '''
+#     Función auxiliar que hace una llamada a la BD
+#     y devuelve el salario de un ID concreto
+#     '''
+#     api_key=request.args.get("apikey")
+#     try:
+#         if jwt.decode(api_key,private_key,algorithms=["HS256"]) == key_desencriptado:
+#             model = pickle.load(open('./../Data/Models/model.pkl', 'rb'))
+#             scaler = pickle.load(open('./../Data/Models/scaler.pkl', 'rb'))
+#             X = pd.DataFrame(make_query("SELECT * FROM current_employees"))
+            
+#             columns_to_drop = ['id_employee','name', 'involvement', 'performance', 'environment', 'department', 'education', 'education_field',
+#                    'gender', 'role', 'years_curr_manager','total_working_years', 'last_promotion', 'age', 'years_company']
+#             X.drop(columns_to_drop, axis=1, inplace=True)
+#             X = scaler.transform(X)
+#             new_value = model.predict(X)
+#             query= f'''_
+#             UPDATE replacement SET months_left = {new_value} WHERE 1;
+#             '''
+#             make_query(query)
+            
+#         else:
+#             return abort(401)
+#     except:
+#         return abort(401)
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
