@@ -377,7 +377,7 @@ def get_graph_bar2():
 
         # graph = fig.to_json()
         # return graph
-        return resultado.to_json()
+        return jsonify(resultado)
         
     except Exception as error:
         print("Error al obtener los usuarios de la base de datos: {}".format(error))
