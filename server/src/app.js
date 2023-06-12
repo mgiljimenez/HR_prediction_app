@@ -11,14 +11,11 @@ const usersRouter = require("./routes/users");
 const app = express();
 app.set("port", process.env.PORT || 4000);
 
-
+// Middleware para configurar los encabezados CORS
+app.use(cors());
 
 app.use("/employees", employeesRouter);
 app.use("/users", usersRouter);
-app.use(cors({
-  origin: '*'
-  }));
-
 
 // SERVER RUNNING--------------------------
 app.listen(app.get("port"), () => {
