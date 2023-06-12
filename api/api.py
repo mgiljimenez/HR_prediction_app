@@ -413,10 +413,10 @@ def make_query_json():
 @app.route('/db/trytoken', methods=['GET'])
 def try_token():
 
-    api_value = request.args
-    api_key = api_value["token"]
+    api_value = request.headers.get("Authorization")
+    # api_key = api_value["token"]
 
-    return jsonify(api_key)
+    return jsonify(api_value)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
