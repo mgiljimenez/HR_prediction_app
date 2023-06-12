@@ -246,7 +246,7 @@ def get_graph_line():
             df=make_query("SELECT months_left FROM replacement")
 
             counts = df['months_left'].value_counts().sort_index()
-            counts_filtered = counts.loc[counts.index <= -300] # Filtro para 24 meses
+            counts_filtered = counts.loc[counts.index <= 24] # Filtro para 24 meses
             fig = px.line(x=counts_filtered.index, y=counts_filtered.values, title="Prediction attrition for next 24 months") # Gráfica de series de tiempo
 
             fig.update_traces(line_width=3, mode='lines+markers', hovertemplate='Month: %{x}<br>Nº of attrition: %{y}')  
@@ -270,7 +270,7 @@ def get_graph_line():
             graph = fig.to_json()
             return graph
         else:
-            return abort(401)
+            return "Patata"
     except:
         return abort(401)
 
