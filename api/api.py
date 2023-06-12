@@ -400,8 +400,15 @@ def make_query_json():
 #     try:
 #         if jwt.decode(api_key,private_key,algorithms=["HS256"]) == key_desencriptado:
 #             model = pickle.load(open('./../Data/Models/model.pkl', 'rb'))
-#             new_value = model.predict()
-#             query= f'''
+#             scaler = pickle.load(open('./../Data/Models/scaler.pkl', 'rb'))
+#             X = pd.DataFrame(make_query("SELECT * FROM current_employees"))
+            
+#             columns_to_drop = ['id_employee','name', 'involvement', 'performance', 'environment', 'department', 'education', 'education_field',
+#                    'gender', 'role', 'years_curr_manager','total_working_years', 'last_promotion', 'age', 'years_company']
+#             X.drop(columns_to_drop, axis=1, inplace=True)
+#             X = scaler.transform(X)
+#             new_value = model.predict(X)
+#             query= f'''_
 #             UPDATE replacement SET months_left = {new_value} WHERE 1;
 #             '''
 #             make_query(query)
@@ -410,14 +417,7 @@ def make_query_json():
 #             return abort(401)
 #     except:
 #         return abort(401)
-@app.route('/db/trytoken', methods=['GET'])
-def try_token():
 
-    api_value = request.headers
-    # api_key = api_value["token"]
-    #
-
-    return print(api_value)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
