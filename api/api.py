@@ -61,56 +61,53 @@ def get_graph_pie():
     '''
     api_key=request.args.get("apikey")
     try:
-        if jwt.decode(api_key,private_key,algorithms=["HS256"]) == key_desencriptado:
-            df_risk=make_query("""SELECT risk from replacement""")
-            count_values = df_risk.value_counts()
-            # Estética de la gráfica
-            colors = {
-                "Low": "#0F9D58",
-                "Medium": '#FFFF00',
-                "High": "#FABC09",
-                "Very high": "#DB4437"
-            }
-            count_values = {
-                "High": 951,
-                "Very high": 931,
-                "Low": 918,
-                "Medium": 898
-            }
-            fig = go.Figure(data=[
-                go.Pie(
-                    labels=list(count_values.keys()),  
-                    values=list(count_values.values()),  
-                    hole=0.4,
-                    pull=[0.05, 0.05, 0.05, 0.05],
-                    marker=dict(colors=[colors[label] for label in count_values.keys()])
-                )
-            ])
-            fig.update_traces(textfont=dict(size=22))
-            fig.update_layout(
-                title="Distribution risk attrition",
-                title_font=dict(size=24),
-                legend=dict(
-                    orientation="h",
-                    yanchor="bottom",
-                    y=1.02,
-                    xanchor="center",
-                    x=0.5
-                ),
-                width=600,
-                height=400,
-                title_x=0.5,
-                paper_bgcolor='rgba(0,0,0,0)', # Fondo transparente
-                font_family="Roboto",
-                font_color="#1D3557",
-                title_font_family="Roboto",
-                title_font_color="#1D3557",
-                legend_title_font_color="#1D3557"
+        df_risk=make_query("""SELECT risk from replacement""")
+        count_values = df_risk.value_counts()
+        # Estética de la gráfica
+        colors = {
+            "Low": "#0F9D58",
+            "Medium": '#FFFF00',
+            "High": "#FABC09",
+            "Very high": "#DB4437"
+        }
+        count_values = {
+            "High": 951,
+            "Very high": 931,
+            "Low": 918,
+            "Medium": 898
+        }
+        fig = go.Figure(data=[
+            go.Pie(
+                labels=list(count_values.keys()),  
+                values=list(count_values.values()),  
+                hole=0.4,
+                pull=[0.05, 0.05, 0.05, 0.05],
+                marker=dict(colors=[colors[label] for label in count_values.keys()])
             )
-            graph=fig.to_json()
-            return graph
-        else:
-            return abort(401)
+        ])
+        fig.update_traces(textfont=dict(size=22))
+        fig.update_layout(
+            title="Distribution risk attrition",
+            title_font=dict(size=24),
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="center",
+                x=0.5
+            ),
+            width=600,
+            height=400,
+            title_x=0.5,
+            paper_bgcolor='rgba(0,0,0,0)', # Fondo transparente
+            font_family="Roboto",
+            font_color="#1D3557",
+            title_font_family="Roboto",
+            title_font_color="#1D3557",
+            legend_title_font_color="#1D3557"
+        )
+        graph=fig.to_json()
+        return graph
     except:
         return abort(401)
 @app.route('/db/graph/bar1', methods=['GET'])
@@ -248,35 +245,35 @@ def get_graph_line():
     '''
     api_key=request.args.get("apikey")
     try:
-        # if jwt.decode(api_key,private_key,algorithms=["HS256"]) == key_desencriptado:
-            df=make_query("SELECT months_left FROM replacement")
+        # # if jwt.decode(api_key,private_key,algorithms=["HS256"]) == key_desencriptado:
+        #     df=make_query("SELECT months_left FROM replacement")
 
-            counts = df['months_left'].value_counts().sort_index()
-            counts_filtered = counts.loc[counts.index <= 24] # Filtro para 24 meses
-            fig = px.line(x=counts_filtered.index, y=counts_filtered.values, title="Prediction attrition for next 24 months") # Gráfica de series de tiempo
+        #     counts = df['months_left'].value_counts().sort_index()
+        #     counts_filtered = counts.loc[counts.index <= 24] # Filtro para 24 meses
+        #     fig = px.line(x=counts_filtered.index, y=counts_filtered.values, title="Prediction attrition for next 24 months") # Gráfica de series de tiempo
 
-            fig.update_traces(line_width=3, mode='lines+markers', hovertemplate='Month: %{x}<br>Nº of attrition: %{y}')  
+        #     fig.update_traces(line_width=3, mode='lines+markers', hovertemplate='Month: %{x}<br>Nº of attrition: %{y}')  
 
-            fig.update_layout(xaxis=dict(
-                tickmode='array',
-                tickvals=counts_filtered.index,
-                ticktext=counts_filtered.index
-            ), xaxis_title="next 24 months", 
-            yaxis_title="Nº of attrition", 
-            title_x=0.5, 
-            title_font={'size': 24},
-            width=840,
-            height=420,
-            paper_bgcolor='rgba(0,0,0,0)',
-            font_family="Roboto",
-            font_color="#1D3557",
-            title_font_family="Roboto",
-            title_font_color="#1D3557",
-            legend_title_font_color="#1D3557")
-            graph = fig.to_json()
-            return graph
-        # else:
-        #     return abort(401)
+        #     fig.update_layout(xaxis=dict(
+        #         tickmode='array',
+        #         tickvals=counts_filtered.index,
+        #         ticktext=counts_filtered.index
+        #     ), xaxis_title="next 24 months", 
+        #     yaxis_title="Nº of attrition", 
+        #     title_x=0.5, 
+        #     title_font={'size': 24},
+        #     width=840,
+        #     height=420,
+        #     paper_bgcolor='rgba(0,0,0,0)',
+        #     font_family="Roboto",
+        #     font_color="#1D3557",
+        #     title_font_family="Roboto",
+        #     title_font_color="#1D3557",
+        #     legend_title_font_color="#1D3557")
+        #     graph = fig.to_json()
+        #     return graph
+        df=make_query("SELECT months_left FROM replacement")
+        return df.to_json()
     except:
         return abort(500)
 
