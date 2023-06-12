@@ -64,6 +64,12 @@ app = Flask(__name__)
 app.config['DEBUG'] = True
 CORS(app)
 
+@app.route('/ping', methods=['GET'])
+def get_ping():
+    print(request.headers)
+    print(request.headers.get("x-auth-token"))
+    return request.headers
+
 @app.route('/db/graph/pie', methods=['GET'])
 def get_graph_pie():
     '''
@@ -325,7 +331,7 @@ def get_graph_bar2():
     try:
         connection = get_connection()
         cursor = connection.cursor()
-        cursor.execute("SELECT job_level, risk FROM replacement")
+        cursor.execute("SELECT * FROM replacement")
         resultado = cursor.fetchall()
         # column_names = [desc[0] for desc in cursor.description] 
         # df = pd.DataFrame(resultado, columns=column_names)
