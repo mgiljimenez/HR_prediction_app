@@ -81,7 +81,7 @@ if (event.key === 'Enter') {
           to="/ranking">Ranking</Link>
           <Link 
           style={{color:'#1D3557'}}
-          to="/employee">Employee Profile</Link>
+          to="/logout">LogOut</Link>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />

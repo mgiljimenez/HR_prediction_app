@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
 
 const Dashboard = () => {
+
   const [plots, setPlots] = useState([]);
-  const [atrittion, setAtrittion] = useState(0);
-  const [data, setData] = useState([]);
 
   const token = localStorage.getItem("token");
   console.log(token);
@@ -36,8 +35,8 @@ const Dashboard = () => {
           <Plot data={plot.data} layout={plot.layout} />
         </div>
       ))}
-      <div>
-        {" "}
+      <div className ='predictionandtraining'>
+      
         <button>TRAINING MODEL</button>
         <button>NEW PREDICTION</button>
       </div>
