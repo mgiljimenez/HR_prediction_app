@@ -282,7 +282,7 @@ df_replacement = pd.DataFrame(resultado, columns=column_names)
 @app.route('/graphs', methods=['GET'])
 def get_all_data():
     try:
-        token=request.headers.get('x-auth-token')
+        token=request.headers.get('token')
         jwt.decode(token, private_key, algorithms=["HS256"])
         #df_graph_pie
         df_graph_pie=df_replacement["risk"].copy()
@@ -309,7 +309,7 @@ def get_all_data():
 @app.route('/db/graph/gauge', methods=['GET'])
 def endpoint_gauge():
     try:
-        token=request.headers.get('x-auth-token')
+        token=request.headers.get('token')
         jwt.decode(token, private_key, algorithms=["HS256"])
         df=df_replacement[["id_employee","life_balance"]]
         id=int(request.args.get("id"))
