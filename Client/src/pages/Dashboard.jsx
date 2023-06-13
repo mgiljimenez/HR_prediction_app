@@ -4,12 +4,8 @@ import Plot from "react-plotly.js";
 const Dashboard = () => {
   const [plots, setPlots] = useState([]);
   const [atrittion, setAtrittion] = useState([]);
-  const [data, setData] = useState([]);
 
-  fetch("https://api-hr-proyect.onrender.com/db/trytoken")
-    .then((res) => res.json())
- .then((data) => setData(data));
-  console.log(data);
+/// Fetching to modify with the new Api data
 
   useEffect(() => {
     const fetchData = async () => {

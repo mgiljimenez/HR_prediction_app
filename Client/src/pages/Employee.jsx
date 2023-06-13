@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Avatar } from "@mui/material";
 import axios from "axios";
-import Plot from 'react-plotly.js';
+import Plot from "react-plotly.js";
 import { FaCoins, FaStopwatch } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import {
@@ -20,20 +20,27 @@ function Employee() {
   // const [searchParams, setSearchParams] = useSearchParams();
   let { id } = useParams();
 
-
   async function test() {
-    const res = await axios.get(`https://prueba-server.onrender.com/employees/${id}`);
-    setEmployees(res.data);console.log(data);
-  }
-  
-  function chartFunction() {
-    fetch(`https://api-hr-proyect.onrender.com/db/graph/gauge?id=${id}&apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250cmFzZW5hIjoieXRmaGd2bWJqbmt5MzRnNiJ9.pMUu_n_2Mx7FPr5LjxpCb2y3jokKzDpHOsTc59eUfec`).then(res => res.json()).then(data => {setPlot(data);});
+    const res = await axios.get(
+      `https://prueba-server.onrender.com/employees/${id}`
+    );
+    setEmployees(res.data);
+    console.log(data);
   }
 
+  function chartFunction() {
+    fetch(
+      `https://api-hr-proyect.onrender.com/db/graph/gauge?id=${id}&apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250cmFzZW5hIjoieXRmaGd2bWJqbmt5MzRnNiJ9.pMUu_n_2Mx7FPr5LjxpCb2y3jokKzDpHOsTc59eUfec`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setPlot(data);
+      });
+  }
 
   useEffect(() => {
     test();
-    chartFunction()
+    chartFunction();
   }, []);
 
   function getColorClassName(satisfaction) {
@@ -87,7 +94,8 @@ function Employee() {
               </Avatar>
             </div>
             <div className="leftUp">
-              <p>id: {employee.id_employee  }</p>
+              <p>id: {employee.id_employee}</p>
+              <p>hola {employee.income_ranking}</p>
 
               <p>{employee.name}</p>
               <p>{employee.department}</p>
@@ -102,14 +110,21 @@ function Employee() {
                   <span>{employee.risk}</span>
                 </h4>
                 <h4 className="month">
-                   <br />
+                  <br />
                   <span>Months Left {employee.months_left}</span>
                 </h4>
               </div>
               <div className="cost-month">
                 /// Añadir símbolo de la moneda
-                <p><FaCoins style={{width:'35px', height:'35px'}}/>  Replacement Cost {employee.replacement_cost}</p>
-                <p> <FaStopwatch style={{width:'35px', height:'35px'}}/> Worklife Balance  {employee.replacement_month}</p>
+                <p>
+                  <FaCoins style={{ width: "35px", height: "35px" }} />{" "}
+                  Replacement Cost {employee.replacement_cost}
+                </p>
+                <p>
+                  {" "}
+                  <FaStopwatch style={{ width: "35px", height: "35px" }} />{" "}
+                  Worklife Balance {employee.replacement_month}
+                </p>
               </div>
             </div>
           </div>
@@ -137,8 +152,10 @@ function Employee() {
                       >
                         Job Involving
                       </TableCell>
-                      <TableCell align="center"
-                      className={getColorClassName(employee.involvement)}>
+                      <TableCell
+                        align="center"
+                        className={getColorClassName(employee.involvement)}
+                      >
                         {employee.involvement}
                       </TableCell>
                     </TableRow>
@@ -178,10 +195,11 @@ function Employee() {
                         component="th"
                         scope="row"
                       >
-                        Salary Hike
+                        Salary Status
                       </TableCell>
-                      <TableCell align="center">
-                        {employee.salary_hike}
+                      <TableCell
+                        align="center"  className={getColorClassName(employee.income_ranking)}>
+                     {employee.income_ranking}
                       </TableCell>
                     </TableRow>
                   </TableBody>
@@ -189,15 +207,12 @@ function Employee() {
               </TableContainer>
             </div>
             <div className="rightDown">
-            <Plot data={plot.data} layout={plot.layout}/>
+              <Plot data={plot.data} layout={plot.layout} />
             </div>
           </div>
         </div>
       ))}
     </div>
-         
-
   );
-
 }
 export default Employee;
