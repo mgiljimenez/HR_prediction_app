@@ -242,7 +242,8 @@ def get_graph_gauge(df, id):
     fig = go.Figure()
     fig.add_trace(go.Indicator(
         mode='gauge',
-        value=df['balance_value'].loc[id],
+        #df.loc[:, 'sex'] == 'Male'
+        value=int(df[df['id_employee'] == id]["balance_value"]),
         domain={'x': [0, 1], 'y': [0, 1]},
         title={'text': "Work Life Balance"},
         gauge={
@@ -252,12 +253,12 @@ def get_graph_gauge(df, id):
             'threshold': {
                 'line': {'color': 'black', 'width': 5},
                 'thickness': .75,
-                'value': df['balance_value'].loc[id]
+                'value': int(df[df['id_employee'] == id]["balance_value"])
             },
             
         }
     ))
-    text_value = df['life_balance'].loc[id]
+    text_value = int(df[df['id_employee'] == id]["balance_value"])
     fig.add_annotation(
         x=0.5, y=0.1,  # Coordenadas en el gráfico (0-1)
         text=text_value,
@@ -301,7 +302,7 @@ def get_all_data():
 
 @app.route('/db/graph/gauge', methods=['GET'])
 def endpoint_gauge():
-    df=df_replacement[["life_balance"]]
+    df=df_replacement[["id_employee","life_balance"]]
     id=int(request.args.get("id"))
     final_graph_gauge=get_graph_gauge(df, id)
     return final_graph_gauge
