@@ -59,7 +59,9 @@ def create_graph_line(df):
     title_font_family="Roboto",
     title_font_color="#1D3557",
     legend_title_font_color="#1D3557")
-    return plotly.io.to_json(fig)
+    json_data= plotly.io.to_json(fig)
+    parsed_json = (json.loads(json_data)) 
+    return parsed_json
 
 
 def create_graph_pie(df_graph_pie):
@@ -107,7 +109,9 @@ def create_graph_pie(df_graph_pie):
         title_font_color="#1D3557",
         legend_title_font_color="#1D3557"
     )
-    return plotly.io.to_json(fig)
+    json_data= plotly.io.to_json(fig)
+    parsed_json = (json.loads(json_data)) 
+    return parsed_json
 
 
 def create_graph_bar1(df):
@@ -155,7 +159,9 @@ def create_graph_bar1(df):
             title_font_color="#1D3557",
             legend_title_font_color="#1D3557"
         )
-        return plotly.io.to_json(fig)
+        json_data= plotly.io.to_json(fig)
+        parsed_json = (json.loads(json_data)) 
+        return parsed_json
 
 def create_graph_bar2(df):
     '''
@@ -208,7 +214,10 @@ def create_graph_bar2(df):
         title_font_color="#1D3557",
         legend_title_font_color="#1D3557"
     )
-    return plotly.io.to_json(fig)
+    print("TIPO:", type(plotly.io.to_json(fig)))
+    json_data= plotly.io.to_json(fig)
+    parsed_json = (json.loads(json_data)) 
+    return parsed_json
 
 connection = get_connection()
 cursor = connection.cursor()
@@ -217,29 +226,82 @@ resultado = cursor.fetchall()
 column_names = [desc[0] for desc in cursor.description] 
 df_replacement = pd.DataFrame(resultado, columns=column_names)
 
-#df_graph_pie
-df_graph_pie=df_replacement["risk"].copy()
-#df_graph_bar1
-df_graph_bar1=df_replacement[["role","risk"]].copy()
-#df_graph_bar2
-df_graph_bar2=df_replacement.copy()
-#df_graph_line
-df_graph_line=df_replacement[["months_left"]].copy
-df_graph_line=df_graph_line()
-#df_attrition
-df_attrition=df_graph_line.copy()
-attrition_24 = len([x for x in df_attrition['months_left'] if -1 < x < 25])
-
-final_graph_line=create_graph_line(df_graph_line)
-final_graph_pie=create_graph_pie(df_graph_pie)
-final_graph_bar1=create_graph_bar1(df_graph_bar1)
-final_graph_bar2=create_graph_bar2(df_graph_bar2)
 
 @app.route('/graphs', methods=['GET'])
 def get_all_data():
+    #df_graph_pie
+    df_graph_pie=df_replacement["risk"].copy()
+    #df_graph_bar1
+    df_graph_bar1=df_replacement[["role","risk"]].copy()
+    #df_graph_bar2
+    df_graph_bar2=df_replacement.copy()
+    #df_graph_line
+    df_graph_line=df_replacement[["months_left"]].copy
+    df_graph_line=df_graph_line()
+    #df_attrition
+    df_attrition=df_graph_line.copy()
+    attrition_24 = len([x for x in df_attrition['months_left'] if -1 < x < 25])
+
+    final_graph_line=create_graph_line(df_graph_line)
+    final_graph_pie=create_graph_pie(df_graph_pie)
+    final_graph_bar1=create_graph_bar1(df_graph_bar1)
+    final_graph_bar2=create_graph_bar2(df_graph_bar2)
     ls_all_data=[final_graph_line,final_graph_pie,final_graph_bar1,final_graph_bar2,attrition_24]
-    json_data = json.dumps(ls_all_data)
-    return jsonify(ls_all_data)
+    # json_data = json.dumps(ls_all_data)
+    print("TIPO DE LA LISTA:", type(ls_all_data))
+    return ls_all_data
+
+# @app.route('/graph_gauge', methods=['GET'])
+# def get_graph_gauge():
+#     df=df_replacement["life_balance"]
+#     num_steps = 100 
+#     risk_mapping = {'Bad': 13, 'Good': 38, 'Better': 63, 'Best':88}
+#     df['balance_value'] = df['life_balance'].map(risk_mapping)
+#     id=int(request.args.get("id"))
+#     # Generar colores interpolados para los pasos de la escala continua
+#     colors_interpolated = [f'rgb({int(255*(1-np.sqrt(i/num_steps)))}, {int(255*np.sqrt(i/num_steps))}, 0)' for i in range(num_steps)]
+#     tick_labels = ['Bad', 'Good', 'Better', 'Best']
+#     tick_values = [20, 40, 60, 80]
+#     # Tamaño de figura adaptado a la web
+#     layout = go.Layout(
+#     width=500,
+#     height=300,
+#     paper_bgcolor='rgba(0,0,0,0)', # Fondo transparente
+#     font_family="Roboto",
+#     font_color="#1D3557",
+#     title_font_family="Roboto",
+#     title_font_color="#1D3557",
+#     legend_title_font_color="#1D3557"
+#     )
+
+#     fig = go.Figure()
+#     fig.add_trace(go.Indicator(
+#         mode='gauge',
+#         value=df['balance_value'].iloc[id],
+#         domain={'x': [0, 1], 'y': [0, 1]},
+#         title={'text': "Work Life Balance"},
+#         gauge={
+#             'axis': {'range': [0, 100], 'tickmode': 'array', 'tickvals': tick_values,'ticktext':tick_labels},
+#             'bar': {'color': 'rgba(0, 0, 0, 0)', 'thickness': 0.75},
+#             'steps': [{'range': [i, i + 1], 'color': colors_interpolated[i]} for i in range(num_steps)],
+#             'threshold': {
+#                 'line': {'color': 'black', 'width': 5},
+#                 'thickness': .75,
+#                 'value': df['balance_value'].iloc[id]
+#             },
+            
+#         }
+#     ))
+#     text_value = df['life_balance'].iloc[id]
+#     fig.add_annotation(
+#         x=0.5, y=0.1,  # Coordenadas en el gráfico (0-1)
+#         text=text_value,
+#         showarrow=False,
+#         font=dict(size=30)
+#     )
+
+#     fig.update_layout(layout)
+#     return plotly.io.to_json(fig)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
