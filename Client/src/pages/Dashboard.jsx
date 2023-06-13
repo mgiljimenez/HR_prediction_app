@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
 
@@ -7,8 +6,13 @@ const Dashboard = () => {
   const [atrittion, setAtrittion] = useState(0);
   const [data, setData] = useState([]);
 
+  const token = localStorage.getItem("token");
+  console.log(token);
   useEffect(() => {
-    fetch("https://api-hr-proyect.onrender.com/graphs")
+    fetch("https://api-hr-proyect.onrender.com/graphs", {
+      method: "GET",
+      headers: { token } 
+    })
       .then((res) => res.json())
       .then((data) => {
         console.log(data, "llega la data");
@@ -16,9 +20,9 @@ const Dashboard = () => {
       })
       .catch((error) => console.log("error al obtener datos", error));
   }, []);
- 
+
   if (!plots.length) return null;
-   console.log(plots);
+  console.log(plots);
   return (
     <div
       className="content"
