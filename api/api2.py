@@ -41,7 +41,7 @@ X = pd.DataFrame(resultado, columns=column_names)
 def new_prediction(X=X):
 
     model = pickle.load(open('Data/Output/Models/Models/JP_12_06_VotingRegressor.pickle', 'rb'))
-    scaler = pickle.load(open('api/scaler.pickle', 'rb'))
+    scaler = pickle.load(open('Data/Output/Models/Models/JP_12_06_VotingRegressor.pickle', 'rb'))
 
 
     columns_to_drop = ['id_employee','name', 'involvement', 'performance', 'environment', 'department', 'education', 'education_field',
