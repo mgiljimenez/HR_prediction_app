@@ -8,6 +8,9 @@ import os
 import json
 import pickle
 
+from sklearn.preprocessing import StandardScaler
+from datetime import date
+
 load_dotenv()
 private_key = os.getenv("private_key")
 
@@ -41,14 +44,15 @@ X = pd.DataFrame(resultado, columns=column_names)
 def new_prediction(X=X):
 
     model = pickle.load(open('Data/Output/Models/Models/JP_12_06_VotingRegressor.pickle', 'rb'))
-    scaler = pickle.load(open('Data/Output/Models/Models/JP_12_06_VotingRegressor.pickle', 'rb'))
+    scaler = pickle.load(open('Data/Output/Models/Models/scaler.pickle', 'rb'))
 
 
     columns_to_drop = ['id_employee','name', 'involvement', 'performance', 'environment', 'department', 'education', 'education_field',
             'gender', 'role', 'years_curr_manager','total_working_years', 'last_promotion', 'age', 'years_company']
     ids=X["id_employee"].tolist()
-    X.drop(columns_to_drop, axis=1, inplace=True)
-    X = scaler.transform(X)
+    X_pred = X.copy()
+    X_pred.drop(columns_to_drop, axis=1, inplace=True)
+    X_pred = scaler.transform(X)
 
     ls_new_value = model.predict(X)
     
@@ -63,8 +67,52 @@ def new_prediction(X=X):
     connection.commit()
     return make_response(jsonify({'status': 'ok'}), 200)
 
-# @app.route('/db/retrain', methods=['GET'])
-# def retrain():
+@app.route('/db/retrain', methods=['GET'])
+def retrain():
+    columns_to_drop = ['id_employee','name', 'involvement', 'performance', 'environment', 'department', 'education', 'education_field',
+                'gender', 'role', 'years_curr_manager','total_working_years', 'last_promotion', 'age']
+        
+    X_retrain = X.copy()
+
+    # Dividimos en features y target, siendo el target x_e_out [-]
+    X = X_retrain.drop(['years_company'], axis = 1)
+    y = X_retrain['years_company']
+
+    X.drop(columns_to_drop, axis=1, inplace=True)
+
+    # Dividimos entre train y test
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+
+    model = pickle.load(open('Data/Output/Models/Models/JP_12_06_VotingRegressor.pickle', 'rb'))
+
+    model.fit(X_scaled, y)
+
+    # # # Exporto a pickle el voting_regressor (con o sin entrenar)
+    date_today = date.today()
+
+    ruta_directorio = "Data/Output/Models/Models"
+    nombre_archivo_actual = "JP_12_06_VotingRegressor.pickle"
+    nombre_archivo_nuevo = f"model_{date_today}.pickle"
+
+    ruta_archivo_actual = os.path.join(ruta_directorio, nombre_archivo_actual)
+    ruta_archivo_nuevo = os.path.join(ruta_directorio, nombre_archivo_nuevo)
+
+    ruta_nuevo_modelo = f'Data/Output/Models/Models/JP_12_06_VotingRegressor.pickle'
+
+    # Renombrar el archivo
+    os.rename(ruta_archivo_actual, ruta_archivo_nuevo)
+
+    modelo = model
+    import pickle
+    try:
+        with open(ruta_nuevo_modelo, 'wb') as archivo:
+            pickle.dump(modelo, archivo)
+        return make_response(jsonify({'status': 'ok'}), 200)
+    except IOError:
+        return make_response(jsonify({'status': 'Invalid'}), 401)
+
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
