@@ -1,0 +1,15 @@
+Primer modelo realizado con Regresion Lineal. El R2 es de 0,60. Queremos predecir en meses cuando un empleado va a terminar en la empresa. 
+
+Hemos utilizado en este modelo las variables para predecir:
+
+ 0   satisfaction        
+ 1   life_balance         
+ 2   age                   
+ 3   travel             
+ 4   marital_status       
+ 5   income               
+ 6   previous_companies   
+ 7   salary_hike        
+ 8   training_ly          
+ 9   involvement_encoded  
+ 10  company_ratio       
