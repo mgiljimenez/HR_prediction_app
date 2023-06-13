@@ -32,17 +32,16 @@ CORS(app, support_credentials=True)
 
 connection = get_connection()
 cursor = connection.cursor()
+cursor.execute("SELECT * from current_employees")
+resultado = cursor.fetchall()
+column_names = [desc[0] for desc in cursor.description] 
+X = pd.DataFrame(resultado, columns=column_names)
 
 @app.route('/db/new_prediction', methods=['GET'])
-def new_prediction():
-    model = pickle.load(open('./../Data/Models/model.pkl', 'rb'))
-    scaler = pickle.load(open('./../Data/Models/scaler.pkl', 'rb'))
+def new_prediction(X):
+    model = pickle.load(open('./../Data\Output\Models/Models/JP_12_06_VotingRegressor.pickle.pkl', 'rb'))
+    scaler = pickle.load(open('./../Data\Output\Models/Models/scaler.pkl', 'rb'))
 
-    cursor.execute("SELECT * from current_employees")
-    resultado = cursor.fetchall()
-    column_names = [desc[0] for desc in cursor.description] 
-    X = pd.DataFrame(resultado, columns=column_names)
-    
     columns_to_drop = ['id_employee','name', 'involvement', 'performance', 'environment', 'department', 'education', 'education_field',
             'gender', 'role', 'years_curr_manager','total_working_years', 'last_promotion', 'age', 'years_company']
     
@@ -57,13 +56,4 @@ def new_prediction():
 
 # @app.route('/db/retrain', methods=['GET'])
 # def retrain():
-#     cnx.close()
-#     cnx.connect()
-#     '''
-#     Función auxiliar que hace una llamada a la BD
-#     y devuelve el salario de un ID concreto
-#     '''
-#     api_key=request.args.get("apikey")
-#     try:
-#         if jwt.decode(api_key,private_key,algorithms=["HS256"]) == key_desencriptado:
-#             # CODIGO DE ENTRENAR
+
