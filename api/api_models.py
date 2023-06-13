@@ -118,8 +118,8 @@ def new_prediction():
         X=tabla_current_employees()
         borrar_datos_predictions()
         try:
-            model = pickle.load(open('Data/Output/Models/Models/JP_12_06_VotingRegressor.pkl', 'rb'))
-            scaler = pickle.load(open('Data/Output/Models/Models/scaler.pkl', 'rb'))
+            model = pickle.load(open('../Data/Output/Models/Models/JP_12_06_VotingRegressor.pkl', 'rb'))
+            scaler = pickle.load(open('../Data/Output/Models/Models/scaler.pkl', 'rb'))
         except:
              return make_response(jsonify({'status': 'Error al cargar archivos'}), 401)
         columns_to_drop = ['id_employee','name', 'involvement', 'performance', 'environment', 'department', 'education', 'education_field',
