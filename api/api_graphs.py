@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 import os
 import json
 import numpy as np
+import jwt
 
 load_dotenv()
 private_key = os.getenv("private_key")
@@ -21,7 +22,7 @@ dbconfig = {
     "password": "admin123",
     "database": "prueba"
 }
-connection_pool = pooling.MySQLConnectionPool(pool_name="mypool", pool_size=7, **dbconfig)
+connection_pool = pooling.MySQLConnectionPool(pool_name="mypool", pool_size=2, **dbconfig)
 # Función auxiliar para obtener una conexión del pool
 def get_connection():
     return connection_pool.get_connection()
@@ -39,7 +40,7 @@ def create_graph_line(df):
     en formato json
     '''
     counts = df['months_left'].value_counts().sort_index()
-    counts_filtered = counts.loc[counts.index <= 24] # Filtro para 24 meses
+    counts_filtered = counts.loc[(counts.index >= 0) & (counts.index <= 25)] # Filtro para 24 meses
     fig = px.line(x=counts_filtered.index, y=counts_filtered.values, title="Prediction attrition for next 24 months") # Gráfica de series de tiempo
 
     fig.update_traces(line_width=3, mode='lines+markers', hovertemplate='Month: %{x}<br>Nº of attrition: %{y}')  
@@ -280,32 +281,41 @@ df_replacement = pd.DataFrame(resultado, columns=column_names)
 
 @app.route('/graphs', methods=['GET'])
 def get_all_data():
-    #df_graph_pie
-    df_graph_pie=df_replacement["risk"].copy()
-    #df_graph_bar1
-    df_graph_bar1=df_replacement[["role","risk"]].copy()
-    #df_graph_bar2
-    df_graph_bar2=df_replacement.copy()
-    #df_graph_line
-    df_graph_line=df_replacement[["months_left"]].copy
-    df_graph_line=df_graph_line()
-    #df_attrition
-    df_attrition=df_graph_line.copy()
-    attrition_24 = len([x for x in df_attrition['months_left'] if -1 < x < 25])
+    try:
+        token=request.headers.get('token')
+        jwt.decode(token, private_key, algorithms=["HS256"])
+        #df_graph_pie
+        df_graph_pie=df_replacement["risk"].copy()
+        #df_graph_bar1
+        df_graph_bar1=df_replacement[["role","risk"]].copy()
+        #df_graph_bar2
+        df_graph_bar2=df_replacement.copy()
+        #df_graph_line
+        df_graph_line=df_replacement[["months_left"]].copy
+        df_graph_line=df_graph_line()
+        #df_attrition
+        df_attrition=df_graph_line.copy()
+        attrition_24 = len([x for x in df_attrition['months_left'] if -1 < x < 25])
 
-    final_graph_line=create_graph_line(df_graph_line)
-    final_graph_pie=create_graph_pie(df_graph_pie)
-    final_graph_bar1=create_graph_bar1(df_graph_bar1)
-    final_graph_bar2=create_graph_bar2(df_graph_bar2)
-    ls_all_data=[final_graph_line,final_graph_pie,final_graph_bar1,final_graph_bar2,{"attrition":attrition_24}]
-    return ls_all_data
+        final_graph_line=create_graph_line(df_graph_line)
+        final_graph_pie=create_graph_pie(df_graph_pie)
+        final_graph_bar1=create_graph_bar1(df_graph_bar1)
+        final_graph_bar2=create_graph_bar2(df_graph_bar2)
+        ls_all_data=[final_graph_line,final_graph_pie,final_graph_bar1,final_graph_bar2,{"attrition":attrition_24}]
+        return ls_all_data
+    except:
+        abort(401)
 
 @app.route('/db/graph/gauge', methods=['GET'])
 def endpoint_gauge():
-    df=df_replacement[["id_employee","life_balance"]]
-    id=int(request.args.get("id"))
-    final_graph_gauge=get_graph_gauge(df, id)
-    return final_graph_gauge
-
+    try:
+        token=request.headers.get('token')
+        jwt.decode(token, private_key, algorithms=["HS256"])
+        df=df_replacement[["id_employee","life_balance"]]
+        id=int(request.args.get("id"))
+        final_graph_gauge=get_graph_gauge(df, id)
+        return final_graph_gauge
+    except:
+        abort(401)
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
