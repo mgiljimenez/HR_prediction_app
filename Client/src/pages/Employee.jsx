@@ -17,7 +17,6 @@ import {
 function Employee() {
   const [employees, setEmployees] = useState([]);
   const [plot, setPlot] = useState(0);
-  // const [searchParams, setSearchParams] = useSearchParams();
   let { id } = useParams();
 
   const token = localStorage.getItem("token")
@@ -29,14 +28,6 @@ function Employee() {
     setEmployees(res.data);
     console.log(data);
   }
-
-  // const token = localStorage.getItem("token");
-  // console.log(token);
-  // useEffect(() => {
-  //   fetch("https://api-hr-proyect.onrender.com/graphs", {
-  //     method: "GET",
-  //     headers: { token } 
-  //   })
 
   function chartFunction() {
     fetch(
