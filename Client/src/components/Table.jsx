@@ -124,7 +124,7 @@ export default function Table() {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    fetch("https://prueba-server.onrender.com/employees")
+    fetch("https://vivapharma-hr-backend.onrender.com/employees")
       .then((response) => response.json())
       .then((data) => {
         const updatedRows = data.map((row, index) => ({

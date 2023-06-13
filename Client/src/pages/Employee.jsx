@@ -22,7 +22,7 @@ function Employee() {
 
   async function test() {
     const res = await axios.get(
-      `https://prueba-server.onrender.com/employees/${id}`
+      `https://vivapharma-hr-backend.onrender.com/employees/${id}`
     );
     setEmployees(res.data);
     console.log(data);
