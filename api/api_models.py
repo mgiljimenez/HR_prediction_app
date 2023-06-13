@@ -9,6 +9,7 @@ import pickle
 from sklearn.preprocessing import StandardScaler
 from datetime import date
 import jwt
+import requests
 
 load_dotenv()
 private_key = os.getenv("private_key")
@@ -118,8 +119,27 @@ def new_prediction():
         X=tabla_current_employees()
         borrar_datos_predictions()
         try:
-            model = pickle.load(open('../Data/Output/Models/Models/JP_12_06_VotingRegressor.pkl', 'rb'))
-            scaler = pickle.load(open('../Data/Output/Models/Models/scaler.pkl', 'rb'))
+            # URL del archivo en GitHub
+            url_model = 'https://github.com/mgiljimenez/HR_prediction_app/blob/data/Data/Output/Models/Models/JP_12_06_VotingRegressor.pkl?raw=true'
+            url_scaler='https://github.com/mgiljimenez/HR_prediction_app/blob/data/Data/Output/Models/Models/scaler.pkl?raw=true'
+            # Descargar el archivo
+            response = requests.get(url_model)
+            file_content = response.content
+            # Guardar el archivo descargado localmente
+            filename = 'JP_12_06_VotingRegressor.pkl'
+            with open(filename, 'wb') as file:
+                file.write(file_content)
+            # Cargar el archivo con pickle
+            model = pickle.load(open(filename, 'rb'))
+
+            response1 = requests.get(url_scaler)
+            file_content1 = response1.content
+            # Guardar el archivo descargado localmente
+            filename1 = 'JP_12_06_VotingRegressor.pkl'
+            with open(filename1, 'wb') as file1:
+                file1.write(file_content1)
+            # Cargar el archivo con pickle
+            scaler = pickle.load(open(filename1, 'rb'))
         except:
              return make_response(jsonify({'status': 'Error al cargar archivos'}), 401)
         columns_to_drop = ['id_employee','name', 'involvement', 'performance', 'environment', 'department', 'education', 'education_field',
