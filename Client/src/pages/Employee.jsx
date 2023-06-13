@@ -30,7 +30,7 @@ function Employee() {
 
   function chartFunction() {
     fetch(
-      `https://api-hr-proyect.onrender.com/db/graph/gauge?id=${id}&apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250cmFzZW5hIjoieXRmaGd2bWJqbmt5MzRnNiJ9.pMUu_n_2Mx7FPr5LjxpCb2y3jokKzDpHOsTc59eUfec`
+      `https://api-hr-proyect.onrender.com/db/graph/gauge?id=${id}`
     )
       .then((res) => res.json())
       .then((data) => {

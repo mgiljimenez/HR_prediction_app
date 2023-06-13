@@ -72,7 +72,6 @@ if (event.key === 'Enter') {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
-            {/* VivaPharma.HR */}
           </Typography>
           <Link 
           style={{color:'#1D3557'}}
