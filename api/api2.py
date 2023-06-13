@@ -38,22 +38,33 @@ column_names = [desc[0] for desc in cursor.description]
 X = pd.DataFrame(resultado, columns=column_names)
 
 @app.route('/db/new_prediction', methods=['GET'])
-def new_prediction(X):
-    model = pickle.load(open('./../Data\Output\Models/Models/JP_12_06_VotingRegressor.pickle.pkl', 'rb'))
-    scaler = pickle.load(open('./../Data\Output\Models/Models/scaler.pkl', 'rb'))
+def new_prediction(X=X):
+
+    model = pickle.load(open('Data/Output/Models/Models/JP_12_06_VotingRegressor.pickle', 'rb'))
+    scaler = pickle.load(open('api/scaler.pickle', 'rb'))
+
 
     columns_to_drop = ['id_employee','name', 'involvement', 'performance', 'environment', 'department', 'education', 'education_field',
             'gender', 'role', 'years_curr_manager','total_working_years', 'last_promotion', 'age', 'years_company']
-    
+    ids=X["id_employee"].tolist()
     X.drop(columns_to_drop, axis=1, inplace=True)
     X = scaler.transform(X)
 
-    new_value = model.predict(X)
-    query= f'''_
-    UPDATE replacement SET months_left = {new_value} WHERE 1;
-    '''
-    cursor.execute(query)
+    ls_new_value = model.predict(X)
+    
+
+    query= f'''
+    DELETE FROM predictions;
+    INSERT INTO predictions (id_employee, total_months_in_company) VALUES (%s, %s)'''
+    values = list(zip(ids, ls_new_value))
+  
+
+    cursor.executemany(query, values)
+    connection.commit()
+    return make_response(jsonify({'status': 'ok'}), 200)
 
 # @app.route('/db/retrain', methods=['GET'])
 # def retrain():
 
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
