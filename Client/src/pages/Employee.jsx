@@ -20,17 +20,27 @@ function Employee() {
   // const [searchParams, setSearchParams] = useSearchParams();
   let { id } = useParams();
 
+  const token = localStorage.getItem("token")
+
   async function test() {
     const res = await axios.get(
-      `https://prueba-server.onrender.com/employees/${id}`
+      `https://vivapharma-hr-backend.onrender.com/employees/${id}`
     );
     setEmployees(res.data);
     console.log(data);
   }
 
+  // const token = localStorage.getItem("token");
+  // console.log(token);
+  // useEffect(() => {
+  //   fetch("https://api-hr-proyect.onrender.com/graphs", {
+  //     method: "GET",
+  //     headers: { token } 
+  //   })
+
   function chartFunction() {
     fetch(
-      `https://api-hr-proyect.onrender.com/db/graph/gauge?id=${id}`
+      `https://api-hr-proyect.onrender.com/db/graph/gauge?id=${id}`, {method: "GET", headers:{ token} }
     )
       .then((res) => res.json())
       .then((data) => {
