@@ -297,7 +297,7 @@ def get_all_data():
     final_graph_pie=create_graph_pie(df_graph_pie)
     final_graph_bar1=create_graph_bar1(df_graph_bar1)
     final_graph_bar2=create_graph_bar2(df_graph_bar2)
-    ls_all_data=[final_graph_line,final_graph_pie,final_graph_bar1,final_graph_bar2,attrition_24]
+    ls_all_data=[final_graph_line,final_graph_pie,final_graph_bar1,final_graph_bar2,{"attrition":attrition_24}]
     return ls_all_data
 
 @app.route('/db/graph/gauge', methods=['GET'])
