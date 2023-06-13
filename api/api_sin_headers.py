@@ -10,7 +10,6 @@ from dotenv import load_dotenv
 import os
 import json
 import numpy as np
-import jwt
 
 load_dotenv()
 private_key = os.getenv("private_key")
@@ -281,41 +280,32 @@ df_replacement = pd.DataFrame(resultado, columns=column_names)
 
 @app.route('/graphs', methods=['GET'])
 def get_all_data():
-    try:
-        token=request.headers.get('x-auth-token')
-        jwt.decode(token, private_key, algorithms=["HS256"])
-        #df_graph_pie
-        df_graph_pie=df_replacement["risk"].copy()
-        #df_graph_bar1
-        df_graph_bar1=df_replacement[["role","risk"]].copy()
-        #df_graph_bar2
-        df_graph_bar2=df_replacement.copy()
-        #df_graph_line
-        df_graph_line=df_replacement[["months_left"]].copy
-        df_graph_line=df_graph_line()
-        #df_attrition
-        df_attrition=df_graph_line.copy()
-        attrition_24 = len([x for x in df_attrition['months_left'] if -1 < x < 25])
+    #df_graph_pie
+    df_graph_pie=df_replacement["risk"].copy()
+    #df_graph_bar1
+    df_graph_bar1=df_replacement[["role","risk"]].copy()
+    #df_graph_bar2
+    df_graph_bar2=df_replacement.copy()
+    #df_graph_line
+    df_graph_line=df_replacement[["months_left"]].copy
+    df_graph_line=df_graph_line()
+    #df_attrition
+    df_attrition=df_graph_line.copy()
+    attrition_24 = len([x for x in df_attrition['months_left'] if -1 < x < 25])
 
-        final_graph_line=create_graph_line(df_graph_line)
-        final_graph_pie=create_graph_pie(df_graph_pie)
-        final_graph_bar1=create_graph_bar1(df_graph_bar1)
-        final_graph_bar2=create_graph_bar2(df_graph_bar2)
-        ls_all_data=[final_graph_line,final_graph_pie,final_graph_bar1,final_graph_bar2,{"attrition":attrition_24}]
-        return ls_all_data
-    except:
-        abort(401)
+    final_graph_line=create_graph_line(df_graph_line)
+    final_graph_pie=create_graph_pie(df_graph_pie)
+    final_graph_bar1=create_graph_bar1(df_graph_bar1)
+    final_graph_bar2=create_graph_bar2(df_graph_bar2)
+    ls_all_data=[final_graph_line,final_graph_pie,final_graph_bar1,final_graph_bar2,{"attrition":attrition_24}]
+    return ls_all_data
 
 @app.route('/db/graph/gauge', methods=['GET'])
 def endpoint_gauge():
-    try:
-        token=request.headers.get('x-auth-token')
-        jwt.decode(token, private_key, algorithms=["HS256"])
-        df=df_replacement[["id_employee","life_balance"]]
-        id=int(request.args.get("id"))
-        final_graph_gauge=get_graph_gauge(df, id)
-        return final_graph_gauge
-    except:
-        abort(401)
+    df=df_replacement[["id_employee","life_balance"]]
+    id=int(request.args.get("id"))
+    final_graph_gauge=get_graph_gauge(df, id)
+    return final_graph_gauge
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
