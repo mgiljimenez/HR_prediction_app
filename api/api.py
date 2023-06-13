@@ -22,7 +22,7 @@ dbconfig = {
     "password": "admin123",
     "database": "prueba"
 }
-connection_pool = pooling.MySQLConnectionPool(pool_name="mypool", pool_size=7, **dbconfig)
+connection_pool = pooling.MySQLConnectionPool(pool_name="mypool", pool_size=2, **dbconfig)
 # Función auxiliar para obtener una conexión del pool
 def get_connection():
     return connection_pool.get_connection()
