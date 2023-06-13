@@ -95,15 +95,14 @@ def retrain():
 
         # # # Exporto a pickle el voting_regressor (con o sin entrenar)
         date_today = date.today()
-        ruta_directorio = "Data/Output/Models/Models"
         nombre_archivo_actual = "JP_12_06_VotingRegressor.pkl"
         nombre_archivo_nuevo = f"model_{date_today}.pkl"
-        ruta_archivo_actual = os.path.join(ruta_directorio, nombre_archivo_actual)
-        ruta_archivo_nuevo = os.path.join(ruta_directorio, nombre_archivo_nuevo)
+        ruta_archivo_actual = os.path.join(nombre_archivo_actual)
+        ruta_archivo_nuevo = os.path.join(nombre_archivo_nuevo)
 
         # Renombrar el archivo
         os.rename(ruta_archivo_actual, ruta_archivo_nuevo)
-        ruta_nuevo_modelo = f'Data/Output/Models/Models/JP_12_06_VotingRegressor.pkl'
+        ruta_nuevo_modelo = f'JP_12_06_VotingRegressor.pkl'
         modelo = model
         with open(ruta_nuevo_modelo, 'wb') as archivo:
             pickle.dump(modelo, archivo)
@@ -119,27 +118,8 @@ def new_prediction():
         X=tabla_current_employees()
         borrar_datos_predictions()
         try:
-            # URL del archivo en GitHub
-            url_model = 'https://github.com/mgiljimenez/HR_prediction_app/blob/data/Data/Output/Models/Models/JP_12_06_VotingRegressor.pkl?raw=true'
-            url_scaler='https://github.com/mgiljimenez/HR_prediction_app/blob/data/Data/Output/Models/Models/scaler.pkl?raw=true'
-            # Descargar el archivo
-            response = requests.get(url_model)
-            file_content = response.content
-            # Guardar el archivo descargado localmente
-            filename = 'JP_12_06_VotingRegressor.pkl'
-            with open(filename, 'wb') as file:
-                file.write(file_content)
-            # Cargar el archivo con pickle
-            model = pickle.load(open(filename, 'rb'))
-
-            response1 = requests.get(url_scaler)
-            file_content1 = response1.content
-            # Guardar el archivo descargado localmente
-            filename1 = 'JP_12_06_VotingRegressor.pkl'
-            with open(filename1, 'wb') as file1:
-                file1.write(file_content1)
-            # Cargar el archivo con pickle
-            scaler = pickle.load(open(filename1, 'rb'))
+             model = pickle.load(open('JP_12_06_VotingRegressor.pickle', 'rb'))
+             scaler = pickle.load(open('scaler.pickle', 'rb'))
         except:
              return make_response(jsonify({'status': 'Error al cargar archivos'}), 401)
         columns_to_drop = ['id_employee','name', 'involvement', 'performance', 'environment', 'department', 'education', 'education_field',
