@@ -98,12 +98,12 @@ function Employee() {
         <div className="employeeContainer" key={employee.id}>
           <div className="UpContainer">
             <div className="employeeImage">
-              <Avatar style={{ height: "100px", width: "100px" }}>
+              <Avatar style={{ height: "100px", width: "100px" , marginLeft:'50px'}}>
                 {employee.name.substring(0, 2).toUpperCase()}
               </Avatar>
             </div>
             <div className="leftUp">
-              <p>id: {employee.id_employee}</p>
+              <p>ID: {employee.id_employee}</p>
               <p>{employee.name}</p>
               <p>{employee.department}</p>
               <p>{employee.role}</p>
@@ -114,22 +114,21 @@ function Employee() {
               <div className="prediction" style={{ display: "flex" }}>
                 <div className="risk">
                  <h4>PREDICTION RISK</h4> 
-                  <span>{employee.risk}</span>
+                  <span style={{marginLeft:'20px'}}>{employee.risk}</span>
                 </div>
                 <div className="month">
-                  <br />
-                  <h4><span>{employee.months_left} </span> <br />MONTHS LEFT</h4>
+                  <h4>MONTHS LEFT</h4>
+                  <span style={{marginLeft:'40px'}}>{employee.months_left}</span>
                 </div>
               </div>
               <div className="cost-month">
-
                 <div className="replacementCost">
-                  <FaCoins style={{ width: "35px", height: "35px" }} />{" "}
+                  <FaCoins style={{ width: "35px", height: "35px", marginLeft:'30px' }} />{" "}
                   Replacement Cost {employee.replacement_cost} €
                 </div>
                 <div className="replacementTime">
-                  <FaStopwatch style={{ width: "35px", height: "35px" }} />{" "}
-                Replacement Time {employee.replacement_month} Months
+                  <FaStopwatch style={{ width: "35px", height: "35px", marginLeft:'10px'}} />{" "}
+                Replacement Time {employee.replacement_month} months
                 </div>
               </div>
             </div>
@@ -147,7 +146,7 @@ function Employee() {
                   borderRadius: "10px",
                 }}
               >
-                <Table sx={{ minWidth: 300 }} aria-label="simple table">
+                <Table sx={{ minWidth: 500 }} aria-label="simple table">
                   <TableBody>
                     <TableRow>
                       <TableCell
