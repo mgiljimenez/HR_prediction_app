@@ -126,7 +126,7 @@ export default function Table() {
 
   useEffect(() => {
     axios("https://vivapharma-hr-backend.onrender.com/employees")
-      .then((data) => {
+      .then(({data}) => {
         const updatedRows = data.map((row, index) => ({
           ...row,
           id: index + 1,
