@@ -12,14 +12,9 @@ function getAllEmployees() {
 	return http.get(getEndpoint())
 }
 
-function getEmployeebyID(id) {
-	return http.get(getEndpoint(id))
-}
-
 const employeeService = {
 	getAllEmployees,
-	getEmployeebyID,
 
 }
 
-export default employeeService 
+export default employeeService

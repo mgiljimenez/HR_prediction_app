@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -8,7 +7,6 @@ import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import { Link } from'react-router-dom';
-import SettingsMenu from './SettingsMenu';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -74,6 +72,7 @@ if (event.key === 'Enter') {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
+            {/* VivaPharma.HR */}
           </Typography>
           <Link 
           style={{color:'#1D3557'}}
@@ -83,7 +82,7 @@ if (event.key === 'Enter') {
           to="/ranking">Ranking</Link>
           <Link 
           style={{color:'#1D3557'}}
-          to="/logout">LogOut</Link>
+          to="/employee">Employee Profile</Link>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -95,7 +94,6 @@ if (event.key === 'Enter') {
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search>
-          <SettingsMenu />
         </Toolbar>
       </AppBar>
     </Box>

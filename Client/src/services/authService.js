@@ -19,7 +19,6 @@ async function signup(payload) {
 
 async function login(payload) {
 	const { headers } = await http.post(endpoint + '/signin', payload)
-
 	return setJWT(headers['x-auth-token'])
 }
 
