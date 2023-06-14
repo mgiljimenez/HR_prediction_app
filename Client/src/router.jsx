@@ -40,6 +40,7 @@ import Employee from "./pages/Employee";
 import Ranking from "./pages/Ranking";
 import LogOut from "./pages/LogOut";
 import Login from "./pages/Login";
+import Settings from "./pages/Settings";
 
 const router = createBrowserRouter([
   {
@@ -52,7 +53,8 @@ const router = createBrowserRouter([
       { path: "/dashboard", element: <Dashboard /> },
       { path: "/ranking", element: <Ranking /> },
       { path: "/employee/:id", element: <Employee  /> },
-      { path: '/logout', element: <LogOut /> }
+      { path: '/logout', element: <LogOut /> },
+      { path: '/settings', element: <Settings /> }
     ],
   },
 ]);
