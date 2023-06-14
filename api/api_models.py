@@ -10,6 +10,7 @@ from sklearn.preprocessing import StandardScaler
 from datetime import date
 import jwt
 import requests
+import joblib
 
 load_dotenv()
 private_key = os.getenv("private_key")
@@ -33,9 +34,8 @@ CORS(app, support_credentials=True)
 
 
 def load_object(filename):
-    with open(filename ,'rb') as f:
-        loaded = pickle.load(f)
-        return loaded
+    loaded = joblib.load(filename)
+    return loaded
 #Funciones necesarias para ejecutar el retrain y new_prediction
 #Funciones individuales que atacan a la base de datos
 def tabla_current_employees():
