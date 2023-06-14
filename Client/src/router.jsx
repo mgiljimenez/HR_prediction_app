@@ -8,7 +8,6 @@ import Employee from "./pages/Employee";
 import Ranking from "./pages/Ranking";
 import LogOut from "./pages/LogOut";
 import Login from "./pages/Login";
-
 import Settings from "./pages/Settings";
 
 
