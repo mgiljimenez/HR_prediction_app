@@ -1,25 +1,27 @@
 body {
   background-color: #ffffff;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
-
-.logo{
+.logo {
   width: 200px;
   height: 60px;
 }
 
- p{
-  font-size:large;
-  color:#1D3557;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
- }
+p {
+  font-size: large;
+  color: #1d3557;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
 a {
   font-weight: 500;
   color: #1d3557;
   text-decoration: inherit;
   margin-right: 30vh;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 a:hover {
   color: #535bf2;
@@ -33,11 +35,9 @@ a:hover {
   background-color: transparent;
 }
 
-
 .MuiToolbar-root {
   background-color: #1d3557;
 }
-
 
 svg {
   background-color: transparent;
@@ -49,26 +49,25 @@ svg {
   align-items: center;
   min-height: 90vh;
 }
-.loginContainer{
+.loginContainer {
   display: flex;
   border-radius: 8px;
-  border: 1px ridge rgba(0,0,0,0.1);
+  border: 1px ridge rgba(0, 0, 0, 0.1);
 }
-.loginImage{
-   background-image: url('/LogoVP.png');
-   background-repeat: no-repeat;
-   background-size: contain;
-   background-position: center;
-   position: relative;
+.loginImage {
+  background-image: url("/LogoVP.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  position: relative;
   width: 380px;
   height: 220px;
-   margin-top: 100px;
+  margin-top: 100px;
 }
 .loginForm {
-  
   background-color: transparent;
-  color:#1D3557;
-  box-shadow: 8px 8px 10px 1px rgba(218,218,218,0.4);
+  color: #1d3557;
+  box-shadow: 8px 8px 10px 1px rgba(218, 218, 218, 0.4);
   padding: 40px 50px;
   z-index: 2;
   flex-direction: column;
@@ -119,155 +118,144 @@ svg {
   transform: translateX(34px);
 } */
 
-.css-1kv6zrn{
+.css-1kv6zrn {
   background-color: red;
 }
 
-.dangerTag{
-  color: #1D3557;
+.dangerTag {
+  color: #1d3557;
   width: 80px;
-/* margin:30px; */
- padding:10px 20px;
- border-radius: 5px;
-}
-
-.MuiToolbar-root{
-  background-color: #ECEFF1;
-}
-
-.personalCardContainer{
-display: grid;
-place-content: center;
-}
-
-.employeeContainer{
-  width: 800px;
-  margin:30px;
-  padding : 20px;
-  color:#1D3557;
-  border: 2px solid rgb(226, 211, 211);
-  border-radius:  10px;
-  
-}
-
-.UpContainer{
- 
-  display:flex;
-  /* justify-content: space-between; */
-  align-items: center;
-
-  
-}
-.leftUp{
-justify-items: center;
-justify-content: space-between;
-margin: 10px;
-padding: 10px;
-/* border:1px solid gray; */
-}
-
-.rightUp{
-  /* border:1px solid gray; */
-  
-}
-
-.prediction{
-  /* border: 1px solid gray; */
-}
-
-.risk{
-  color:#ECEFF1;
-  background-color: #DB4437;
-  margin:10px;
-  padding: 40px;
-  border-radius: 10px;
- 
- 
-} 
-.month{
-  display: block;
-  background-color: #1d3557;
-  color:#ECEFF1;
-  margin:10px;
-  border-radius: 10px;
-  padding: 10px;
-  border:1px solid gray;
-  
-} 
-
-/* .month p {
-  color:#ECEFF1;
-  padding: 0 50px;
-  border: 1px solid gray;
+  /* margin:30px; */
+  padding: 10px 20px;
   border-radius: 5px;
-} */
-
-.cost-month {
-  padding: 0 50px;
-  /* border: 1px solid gray;
-  background-color: #FABC09; */
 }
 
-.replacementCost{
-border: 1px solid gray;
-margin-bottom: 10px;
-padding: 10px;
-border-radius: 20px;
-align-items: center;
+.MuiToolbar-root {
+  background-color: #eceff1;
 }
-.replacementTime{
-  border:  1px solid gray;
+
+.personalCardContainer {
+  display: grid;
+  place-content: center;
+}
+
+.employeeContainer {
+  width: 1000px;
+  margin: 30px;
+  padding: 20px;
+  color: #1d3557;
+  border: 2px solid rgb(226, 211, 211);
+  border-radius: 10px;
+}
+
+.UpContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.leftUp {
+  justify-items: center;
+  justify-content: space-between;
+  margin: 10px;
+  padding: 10px;
+  /* border:1px solid gray; */
+}
+
+.rightUp {
+  /* border:1px solid gray; */
+}
+
+.prediction {
+  margin-right: 30px;
+}
+
+.risk {
+  color: #eceff1;
+  background-color: #db4437;
+  margin: 10px;
+  padding: 0px 6px ;
+  border-radius: 10px;
+}
+
+.month {
+  display: grid;
+  place-content: center;
+  background-color: #1d3557;
+  color: #eceff1;
+  margin: 10px;
+  border-radius: 10px;
+  padding: 0px  6px;
+  width: 130px;
+  height: 100px;
+}
+
+.replacementCost {
+  border: 1px solid gray;
+  margin-bottom: 10px;
   padding: 10px;
   border-radius: 20px;
+  align-items: center;
+  width: 285px;
 }
-h4{
+.replacementTime {
+  border: 1px solid gray;
+  padding: 10px;
+  border-radius: 20px;
+  width: 285px;
+}
+/* h4 {
   font-size: 15px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+} */
 
 span {
- font-size:x-large;
+  font-size: x-large;
+  margin-bottom: 10px;
+  
 }
 
-.downContainer{
-  display:flex;
+.downContainer {
+  display: flex;
   padding-left: 60px;
-  /* border: 1px solid gray; */
 }
 
-.leftDown{
+.leftDown {
   margin-top: 20px;
 }
+.rightDown {
+  /* margin-left: 200px; */
+}
 
-.employeeImage{
- margin-top: 40px;
+.employeeImage {
+  margin-top: 40px;
   padding: 10px;
 }
 
 .medium {
-  background-color: #FABC09;
+  background-color: #fabc09;
 }
 
 .low {
-  background-color: #DB4437;
+  background-color: #db4437;
 }
 
 .high {
-  background-color: #FFFF00;
+  background-color: #ffff00;
 }
 
 .very-high {
-  background-color: #0F9D58;
+  background-color: #0f9d58;
 }
 
-.attrition{
-  background-color: #ECEFF1;
-  border: 3px ridge rgba(0,0,0,0.1);
+.attrition {
+  background-color: #eceff1;
+  border: 3px ridge rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   height: 50px;
   align-items: center;
-  color:#1D3557;
-  box-shadow: 10px 10px 20px 4px rgba(218,218,218,1);
+  color: #1d3557;
+  box-shadow: 10px 10px 20px 4px rgba(218, 218, 218, 1);
 }
 
 .custom-table .MuiDataGrid-row:nth-child(even) {
@@ -278,8 +266,7 @@ span {
   background-color: #ffffff;
 }
 
-footer{
-  background-color: #ECEFF1;
-align-items: center; 
+footer {
+  background-color: #eceff1;
+  align-items: center;
 }
-
