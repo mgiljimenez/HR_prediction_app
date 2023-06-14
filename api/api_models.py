@@ -149,7 +149,7 @@ def new_prediction():
         conn.close() 
         return make_response(jsonify({'status': 'ok'}), 200)
     except Exception as e:
-        return make_response(jsonify({'Error': e}), 500)
+        return jsonify({'Error': e})
 
 
 if __name__ == '__main__':
