@@ -141,7 +141,7 @@ def new_prediction():
         conn.close() 
         return make_response(jsonify({'status': 'ok'}), 200)
     except:
-        return make_response(jsonify({'status': 'Invalid'}), 401)
+        return make_response(jsonify({'status': os.getcwd(),"listdir":os.listdir()}), 401)
 
 
 if __name__ == '__main__':
