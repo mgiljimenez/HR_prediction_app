@@ -122,15 +122,15 @@ function Employee() {
                 </div>
               </div>
               <div className="cost-month">
-                <h4>
+
+                <div className="replacementCost">
                   <FaCoins style={{ width: "35px", height: "35px" }} />{" "}
                   Replacement Cost {employee.replacement_cost} €
-                </h4>
-                <p>
-                  {" "}
+                </div>
+                <div className="replacementTime">
                   <FaStopwatch style={{ width: "35px", height: "35px" }} />{" "}
-                  Worklife Balance {employee.replacement_month}
-                </p>
+                Replacement Time {employee.replacement_month} Months
+                </div>
               </div>
             </div>
           </div>

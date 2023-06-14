@@ -82,7 +82,10 @@ if (event.key === 'Enter') {
           <Link 
           style={{color:'#1D3557'}}
           to="/logout">LogOut</Link>
-          <Search>
+           <Link 
+          style={{color:'#1D3557'}}
+          to="/settings">Notifications</Link>
+          {/* <Search>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
@@ -92,7 +95,7 @@ if (event.key === 'Enter') {
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
             />
-          </Search>
+          </Search> */}
         </Toolbar>
       </AppBar>
     </Box>
