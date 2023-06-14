@@ -130,7 +130,7 @@ def new_prediction():
             def obtener_ruta_archivo(nombre_archivo):
                 ruta_absoluta = os.path.abspath(nombre_archivo)
                 return ruta_absoluta
-            alfa=load_object("JP_12_06_VotingRegressor.pickle")
+            alfa=obtener_ruta_archivo("JP_12_06_VotingRegressor.pickle")
             return make_response(jsonify({'status': alfa}), 401)
         try:
              scaler = load_object("scaler.pickle")
