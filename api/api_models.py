@@ -32,7 +32,10 @@ app = Flask(__name__)
 CORS(app, support_credentials=True)
 
 
-
+def load_object(filename):
+    with open('api/'+filename ,'rb') as f:
+        loaded = pickle.load(f)
+        return loaded
 #Funciones necesarias para ejecutar el retrain y new_prediction
 #Funciones individuales que atacan a la base de datos
 def tabla_current_employees():
@@ -90,7 +93,7 @@ def retrain():
         # Dividimos entre train y test
         scaler = StandardScaler()
         X_scaled = scaler.fit_transform(X)
-        model = pickle.load(open('Data/Output/Models/Models/JP_12_06_VotingRegressor.pkl', 'rb'))
+        model = load_object("JP_12_06_VotingRegressor.pkl")
         model.fit(X_scaled, y)
 
         # # # Exporto a pickle el voting_regressor (con o sin entrenar)
@@ -118,8 +121,8 @@ def new_prediction():
         X=tabla_current_employees()
         borrar_datos_predictions()
         try:
-             model = pickle.load(open('JP_12_06_VotingRegressor.pickle', 'rb'))
-             scaler = pickle.load(open('scaler.pickle', 'rb'))
+             model = load_object("JP_12_06_VotingRegressor.pickle")
+             scaler = load_object("scaler.pickle")
         except:
              return make_response(jsonify({'status': 'Error al cargar archivos'}), 401)
         columns_to_drop = ['id_employee','name', 'involvement', 'performance', 'environment', 'department', 'education', 'education_field',

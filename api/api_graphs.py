@@ -14,13 +14,17 @@ import jwt
 
 load_dotenv()
 private_key = os.getenv("private_key")
+db_host=os.getenv("db_host")
+db_user=os.getenv("db_user")
+db_password=os.getenv("db_password")
+db_database=os.getenv("db_database")
 
 # Configura el pool de conexiones
 dbconfig = {
-    "host": "test-db.cze2nnbbx5pc.eu-west-3.rds.amazonaws.com",
-    "user": "admin",
-    "password": "admin123",
-    "database": "prueba"
+    "host": db_host,
+    "user": db_user,
+    "password": db_password,
+    "database": db_database
 }
 connection_pool = pooling.MySQLConnectionPool(pool_name="mypool", pool_size=2, **dbconfig)
 # Función auxiliar para obtener una conexión del pool
@@ -216,7 +220,6 @@ def create_graph_bar2(df):
         title_font_color="#1D3557",
         legend_title_font_color="#1D3557"
     )
-    print("TIPO:", type(plotly.io.to_json(fig)))
     json_data= plotly.io.to_json(fig)
     parsed_json = (json.loads(json_data)) 
     return parsed_json
@@ -259,7 +262,7 @@ def get_graph_gauge(df, id):
             
         }
     ))
-    text_value = int(df[df['id_employee'] == id]["balance_value"])
+    text_value = int(df[df['id_employee'] == id]["life_balance"])
     fig.add_annotation(
         x=0.5, y=0.1,  # Coordenadas en el gráfico (0-1)
         text=text_value,
