@@ -53,7 +53,7 @@ app.use("/users", usersRouter);
 
 
 // Cada cinco segundos envia un correo a los que tienen la Notificación 2 activa
-cron.schedule('*/5 * * * * *', () => {
+cron.schedule('* */5 * * * *', () => {
 
   async function sendNotificacione1() {
     const [rows] = await pool.query("SELECT email FROM registro WHERE Notificacion2 = ?", [1]);
