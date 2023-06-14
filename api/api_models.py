@@ -121,8 +121,8 @@ def new_prediction():
         X=tabla_current_employees()
         borrar_datos_predictions()
         try:
-             model = load_object("JP_12_06_VotingRegressor.pickle")
-             scaler = load_object("scaler.pickle")
+             model = load_object("/JP_12_06_VotingRegressor.pickle")
+             scaler = load_object("/scaler.pickle")
         except:
              return make_response(jsonify({'status': os.getcwd()}), 401)
             #  return make_response(jsonify({'status': 'Error al cargar archivos'}), 401)
