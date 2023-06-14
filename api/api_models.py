@@ -33,7 +33,7 @@ CORS(app, support_credentials=True)
 
 
 def load_object(filename):
-    with open(filename ,'rb') as f:
+    with open(os.getcwd()+"/"+filename ,'rb') as f:
         loaded = pickle.load(f)
         return loaded
 #Funciones necesarias para ejecutar el retrain y new_prediction
@@ -125,11 +125,11 @@ def new_prediction():
         X=tabla_current_employees()
         borrar_datos_predictions()
         try:
-             model = load_object("../JP_12_06_VotingRegressor.pickle")
+             model = load_object("JP_12_06_VotingRegressor.pickle")
         except:
              return make_response(jsonify({'status': os.getcwd()}), 401)
         try:
-             scaler = load_object("../scaler.pickle")
+             scaler = load_object("scaler.pickle")
         except:
              return make_response(jsonify({'status': "Error scaler"}))
             #  return make_response(jsonify({'status': 'Error al cargar archivos'}), 401)
