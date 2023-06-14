@@ -33,7 +33,7 @@ CORS(app, support_credentials=True)
 
 
 def load_object(filename):
-    with open(filename ,'rb') as f:
+    with open("api/"+filename ,'rb') as f:
         loaded = pickle.load(f)
         return loaded
 #Funciones necesarias para ejecutar el retrain y new_prediction
@@ -57,17 +57,21 @@ def borrar_datos_predictions():
         cursor.close()
         conn.close() 
 def subir_nuevos_datos_predictions(df_final):
-        conn = get_connection()
-        cursor = conn.cursor()
+    conn = get_connection()
+    cursor = conn.cursor()
 
-        for _, row in df_final.iterrows():
-                insert_query = f"INSERT INTO predictions (id_employee, total_months_in_company) VALUES (%s, %s)"
-                values = (row['id_employee'], row['total_months_in_company'])
-                cursor.execute(insert_query, values)
+    insert_query = "INSERT INTO predictions (id_employee, total_months_in_company) VALUES (%s, %s)"
+    values = [(row['id_employee'], row['total_months_in_company']) for _, row in df_final.iterrows()]
 
+    try:
+        cursor.executemany(insert_query, values)
         conn.commit()
+    except:
+        conn.rollback()
+        raise
+    finally:
         cursor.close()
-        conn.close() 
+        conn.close()
 
 
 @app.route('/retrain', methods=['GET'])
@@ -121,11 +125,15 @@ def new_prediction():
         X=tabla_current_employees()
         borrar_datos_predictions()
         try:
-             model = load_object("/JP_12_06_VotingRegressor.pickle")
-             scaler = load_object("/scaler.pickle")
+             model = load_object("JP_12_06_VotingRegressor.pickle")
+             scaler = load_object("scaler.pickle")
         except:
              return make_response(jsonify({'status': os.getcwd()}), 401)
             #  return make_response(jsonify({'status': 'Error al cargar archivos'}), 401)
+
+        # Descargar el archivo JP_12_06_VotingRegressor.pickle desde GitHub
+
+
         columns_to_drop = ['id_employee','name', 'involvement', 'performance', 'environment', 'department', 'education', 'education_field',
                 'gender', 'role', 'years_curr_manager','total_working_years', 'last_promotion', 'age', 'years_company']
         ids=X["id_employee"].tolist()
@@ -142,7 +150,7 @@ def new_prediction():
         conn.close() 
         return make_response(jsonify({'status': 'ok'}), 200)
     except:
-        return make_response(jsonify({'status': os.getcwd(),"listdir":os.listdir()}), 401)
+        return make_response(jsonify({'status': "error interno"}), 500)
 
 
 if __name__ == '__main__':
