@@ -124,8 +124,8 @@ def new_prediction():
         try:
             model=importar_modelo()
             scaler=importar_scaler()
-        except:
-            return make_response(jsonify({'status': "error cargar modelo y scaler"}), 500)
+        except Exception as e:
+            return make_response(jsonify({'Error': e}), 500)
 
         columns_to_drop = ['id_employee','name', 'involvement', 'performance', 'environment', 'department', 'education', 'education_field',
                 'gender', 'role', 'years_curr_manager','total_working_years', 'last_promotion', 'age', 'years_company']
