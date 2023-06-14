@@ -12,9 +12,9 @@ function Layout() {
         <br />
    
         <Outlet />
-        <footer>
+        {/* <footer>
         <Footer />
-        </footer>
+        </footer> */}
        
       </div>
     </>
