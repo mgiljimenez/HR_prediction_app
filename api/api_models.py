@@ -74,6 +74,46 @@ def subir_nuevos_datos_predictions(df_final):
         cursor.close()
         conn.close()
 
+def importar_modelo():
+    try:
+        # Crea un cursor para ejecutar las consultas
+        conn = get_connection()
+        cursor = conn.cursor()
+        # Recupera el modelo serializado desde la base de datos
+        consulta = "SELECT modelo FROM modelos WHERE id = (SELECT MAX(id) FROM modelos)"
+        cursor.execute(consulta)
+        # Obtiene el modelo serializado
+        modelo_serializado = cursor.fetchone()[0]
+        # Carga el modelo desde los datos serializados
+        modelo_cargado = pickle.loads(modelo_serializado)
+        return modelo_cargado
+    except Exception as e:
+        return make_response(jsonify({'Error': e}), 500)
+    finally:
+        # Cierra la conexión
+        cursor.close()
+        conn.close()
+
+def importar_scaler():
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        # Crea un cursor para ejecutar las consultas
+        # Recupera el modelo serializado desde la base de datos
+        consulta = "SELECT scaler FROM modelos WHERE id = (SELECT MAX(id) FROM modelos)"
+        cursor.execute(consulta)
+        # Obtiene el modelo serializado
+        scaler_serializado = cursor.fetchone()[0]
+        # Carga el modelo desde los datos serializados
+        scaler_cargado = pickle.loads(scaler_serializado)
+        return scaler_cargado
+    except Exception as e:
+        print("Error:", e)
+    finally:
+        # Cierra la conexión
+        cursor.close()
+        conn.close()
+
 @app.route('/new_prediction', methods=['GET'])
 def new_prediction():
     try:
@@ -81,21 +121,9 @@ def new_prediction():
         # jwt.decode(token, private_key, algorithms=["HS256"])
         X=tabla_current_employees()
         borrar_datos_predictions()
-        try:
-            model = load_object("/opt/render/project/src/api/JP_12_06_VotingRegressor.pickle")        
-        except FileNotFoundError:
-            return "File not found"
-        
-        except:
-            return "Error al leer el archivo."
-        
-        try:
-             scaler = load_object("/opt/render/project/src/api/scaler.pickle")
 
-        except:
-             return "Error scaler.pickle"
-
-
+        model=importar_modelo()
+        scaler=importar_scaler()
 
         columns_to_drop = ['id_employee','name', 'involvement', 'performance', 'environment', 'department', 'education', 'education_field',
                 'gender', 'role', 'years_curr_manager','total_working_years', 'last_promotion', 'age', 'years_company']
@@ -120,23 +148,6 @@ def new_prediction():
         return make_response(jsonify({'status': 'ok'}), 200)
     except:
         return make_response(jsonify({'status': "error interno"}), 500)
-
-@app.route('/new_txt', methods=['GET'])
-def new_txt():
-    def leer_archivo(nombre_archivo):
-        try:
-            with open(nombre_archivo, 'r') as archivo:
-                contenido = archivo.read()
-                return contenido
-        except FileNotFoundError:
-            return "El archivo no existe."
-        except:
-            return "Error al leer el archivo."
-    # Ejemplo de uso
-    nombre_archivo = "/opt/render/project/src/api/prueba.txt"
-    contenido = leer_archivo(nombre_archivo)
-    return make_response(jsonify({'txt': contenido}), 200)
-
 
 
 if __name__ == '__main__':
