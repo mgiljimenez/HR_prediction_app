@@ -148,8 +148,8 @@ def new_prediction():
         cursor.close()
         conn.close() 
         return make_response(jsonify({'status': 'ok'}), 200)
-    except:
-        return make_response(jsonify({'status': "error interno"}), 500)
+    except Exception as e:
+        return make_response(jsonify({'Error': e}), 500)
 
 
 if __name__ == '__main__':
