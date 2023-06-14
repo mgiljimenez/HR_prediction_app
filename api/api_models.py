@@ -33,7 +33,7 @@ CORS(app, support_credentials=True)
 
 
 def load_object(filename):
-    with open("/opt/render/project/src/api/"+filename ,'rb') as f:
+    with open("opt/render/project/src/api/"+filename ,'rb') as f:
         loaded = pickle.load(f)
         return loaded
 #Funciones necesarias para ejecutar el retrain y new_prediction
