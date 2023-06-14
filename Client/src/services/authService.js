@@ -17,10 +17,22 @@ async function signup(payload) {
 	return setJWT(headers['x-auth-token'])
 }
 
+async function getUser() {
+	const data = await http.get(endpoint + '/account')
+
+	return data
+}
+
 async function login(payload) {
 	const { headers } = await http.post(endpoint + '/signin', payload)
 
 	return setJWT(headers['x-auth-token'])
+}
+
+async function updateSettings(payload) {
+	const data = await http.put(endpoint + '/settings', payload)
+
+	return data
 }
 
 function logout() {
@@ -46,6 +58,8 @@ const authService = {
 	login,
 	logout,
 	getCurrentUser,
+	updateSettings,
+	getUser
 }
 
 export default authService
