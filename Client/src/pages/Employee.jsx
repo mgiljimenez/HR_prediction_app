@@ -24,7 +24,7 @@ function Employee() {
 
   async function test() {
     const res = await axios.get(
-      `https://vivapharma-hr-backend.onrender.com/employees/${id}`
+      `https://vivapharma-hr-backend.onrender.com/employees/${id}`,
     );
     setEmployees(res.data);
     console.log(data);
@@ -40,7 +40,7 @@ function Employee() {
 
   function chartFunction() {
     fetch(
-      `https://api-hr-proyect.onrender.com/db/graph/gauge?id=${id}`, {method: "GET", headers:{ token} }
+      `https://api-hr-proyect.onrender.com/db/graph/gauge?id=${id}`, {method: "GET", headers:{ token } }
     )
       .then((res) => res.json())
       .then((data) => {
@@ -89,12 +89,11 @@ function Employee() {
     } else if (environment === "Very High") {
       return "very-high";
     }
-
     return "";
   }
 
   return (
-    <div>
+    <div className="personalCardContainer">
       {employees.map((employee) => (
         <div className="employeeContainer" key={employee.id}>
           <div className="UpContainer">
@@ -105,8 +104,6 @@ function Employee() {
             </div>
             <div className="leftUp">
               <p>id: {employee.id_employee}</p>
-              <p>hola {employee.income_ranking}</p>
-
               <p>{employee.name}</p>
               <p>{employee.department}</p>
               <p>{employee.role}</p>
@@ -115,21 +112,20 @@ function Employee() {
             </div>
             <div className="rightUp">
               <div className="prediction" style={{ display: "flex" }}>
-                <h4 className="risk">
-                  PREDICTION RISK <br />
+                <div className="risk">
+                 <h4>PREDICTION RISK</h4> 
                   <span>{employee.risk}</span>
-                </h4>
-                <h4 className="month">
+                </div>
+                <div className="month">
                   <br />
-                  <span>Months Left {employee.months_left}</span>
-                </h4>
+                  <h4><span>{employee.months_left} </span> <br />MONTHS LEFT</h4>
+                </div>
               </div>
               <div className="cost-month">
-                /// Añadir símbolo de la moneda
-                <p>
+                <h4>
                   <FaCoins style={{ width: "35px", height: "35px" }} />{" "}
-                  Replacement Cost {employee.replacement_cost}
-                </p>
+                  Replacement Cost {employee.replacement_cost} €
+                </h4>
                 <p>
                   {" "}
                   <FaStopwatch style={{ width: "35px", height: "35px" }} />{" "}
@@ -144,19 +140,18 @@ function Employee() {
           >
             <div className="leftDown">
               <TableContainer
+              className="customTableContainer"
                 component={Paper}
                 style={{
                   backgroundColor: "transparent",
-                  border: "2px #1d3557 solid",
                   borderRadius: "10px",
-                  boxShadow: "8px 8px 10px 0px rgba(29,53,87,1)",
                 }}
               >
                 <Table sx={{ minWidth: 300 }} aria-label="simple table">
                   <TableBody>
                     <TableRow>
                       <TableCell
-                        style={{ color: "#1d3557" }}
+                        style={{ color: "#1d3557"}}
                         component="th"
                         scope="row"
                       >
@@ -164,8 +159,8 @@ function Employee() {
                       </TableCell>
                       <TableCell
                         align="center"
-                        className={getColorClassName(employee.involvement)}
-                      >
+                        // style={{width :"100px"}}
+                        className={getColorClassName(employee.involvement)} style={{borderRadius:'8px'}} >
                         {employee.involvement}
                       </TableCell>
                     </TableRow>
@@ -179,7 +174,7 @@ function Employee() {
                       </TableCell>
                       <TableCell
                         align="center"
-                        className={getColorClassName(employee.environment)}
+                        className={getColorClassName(employee.environment)} style={{borderRadius:'8px'}}
                       >
                         {employee.environment}
                       </TableCell>
@@ -194,21 +189,21 @@ function Employee() {
                       </TableCell>
                       <TableCell
                         align="center"
-                        className={getColorClassName(employee.satisfaction)}
+                        className={getColorClassName(employee.satisfaction)} style={{borderRadius:'8px'}}
                       >
                         {employee.satisfaction}
                       </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell
-                        style={{ color: "#1d3557" }}
+                        style={{ color: "#1d3557"}}
                         component="th"
                         scope="row"
                       >
                         Salary Status
                       </TableCell>
                       <TableCell
-                        align="center"  className={getColorClassName(employee.income_ranking)}>
+                        align="center"  className={getColorClassName(employee.income_ranking)} style={{borderRadius:'8px'}}>
                      {employee.income_ranking}
                       </TableCell>
                     </TableRow>

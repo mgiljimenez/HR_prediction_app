@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import axios from 'axios'
+
 
 const columns = [
   { field: "id_employee", headerName: "ID", width: 70 },
@@ -125,7 +126,9 @@ export default function Table() {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
+
     axios("https://vivapharma-hr-backend.onrender.com/employees")
+
       .then(({data}) => {
         const updatedRows = data.map((row, index) => ({
           ...row,

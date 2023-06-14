@@ -134,67 +134,99 @@ svg {
 .MuiToolbar-root{
   background-color: #ECEFF1;
 }
+
+.personalCardContainer{
+display: grid;
+place-content: center;
+}
+
 .employeeContainer{
-  background-color: #ECEFF1;
+  width: 800px;
   margin:30px;
-  border: 3px ridge rgba(0,0,0,0.1);
-  border-radius: 10px;
   padding : 20px;
   color:#1D3557;
-  box-shadow: 10px 10px 20px 4px rgba(218,218,218,1);
+  
 }
 
 .UpContainer{
+ 
   display:flex;
-  justify-content: space-between;
-  padding: 0 100px;
+  /* justify-content: space-between; */
+  align-items: center;
+
   
 }
 .leftUp{
+  border : 1px solid gray;
 justify-items: center;
 justify-content: space-between;
+margin: 10px;
+padding: 10px;
+border:1px solid gray;
+}
+
+.rightUp{
+  /* border:1px solid gray; */
+  
+}
+
+.prediction{
+  /* border: 1px solid gray; */
 }
 
 .risk{
   color:#ECEFF1;
-  background-color: #e63946;
+  background-color: #DB4437;
   margin:10px;
   padding: 40px;
   border-radius: 10px;
-  border:2px #1d3557 solid;
-  box-shadow:3px 3px 5px 0px rgba(29,53,87,1);
+ 
+ 
 } 
 .month{
+  display: block;
   background-color: #1d3557;
   color:#ECEFF1;
   margin:10px;
   border-radius: 10px;
-  padding: 40px;
-  border:2px #e63946 solid;
-  box-shadow:3px 3px 5px 0px rgba(29,53,87,1);
+  padding: 10px;
+  border:1px solid gray;
+  
 } 
-.cost-month{
+
+/* .month p {
+  color:#ECEFF1;
   padding: 0 50px;
+  border: 1px solid gray;
+  border-radius: 5px;
+} */
+
+.cost-month {
+  padding: 0 50px;
+  border: 1px solid gray;
+  border-radius: 5px;
 }
+
 h4{
- justify-content: center;
- margin: auto;
-}
-h5{
   font-size: 15px;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
-span{
+
+span {
  font-size:x-large;
 }
+
 .downContainer{
+
   display:flex;
-  justify-content: space-between;
-  padding: 0 100px;
+  padding-left: 60px;
+  border: 1px solid gray;
+  
 }
 
 .leftDown{
   margin-top: 20px;
+
 }
 
 .employeeImage{
@@ -239,9 +271,5 @@ span{
 footer{
   background-color: #ECEFF1;
 align-items: center; 
-}
-
-.user-select-none {
-  font-family: 'Courier New', Courier, monospace;
 }
 
