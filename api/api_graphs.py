@@ -262,7 +262,7 @@ def get_graph_gauge(df, id):
             
         }
     ))
-    text_value = int(df[df['id_employee'] == id]["life_balance"])
+    text_value = df[df['id_employee'] == id]["life_balance"][0]
     fig.add_annotation(
         x=0.5, y=0.1,  # Coordenadas en el gráfico (0-1)
         text=text_value,
