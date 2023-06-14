@@ -34,9 +34,9 @@ app = Flask(__name__)
 CORS(app, support_credentials=True)
 
 
-# def load_object(filename):
-#     loaded = joblib.load(filename)
-#     return loaded
+def load_object(filename):
+    loaded = joblib.load(filename)
+    return loaded
 #Funciones necesarias para ejecutar el retrain y new_prediction
 #Funciones individuales que atacan a la base de datos
 def tabla_current_employees():
@@ -74,50 +74,6 @@ def subir_nuevos_datos_predictions(df_final):
         cursor.close()
         conn.close()
 
-
-@app.route('/retrain', methods=['GET'])
-def retrain():
-    try:
-        conn = get_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT * from current_employees")
-        resultado = cursor.fetchall()
-        column_names = [desc[0] for desc in cursor.description]
-        cursor.close()
-        conn.close() 
-        X = pd.DataFrame(resultado, columns=column_names)
-        columns_to_drop = ['id_employee','name', 'involvement', 'performance', 'environment', 'department', 'education', 'education_field',
-                    'gender', 'role', 'years_curr_manager','total_working_years', 'last_promotion', 'age']
-            
-        X_retrain = X.copy()
-        # Dividimos en features y target, siendo el target x_e_out [-]
-        X = X_retrain.drop(['years_company'], axis = 1)
-        y = X_retrain['years_company']
-
-        X.drop(columns_to_drop, axis=1, inplace=True)
-        # Dividimos entre train y test
-        scaler = StandardScaler()
-        X_scaled = scaler.fit_transform(X)
-        model = load_object("JP_12_06_VotingRegressor.pkl")
-        model.fit(X_scaled, y)
-
-        # # # Exporto a pickle el voting_regressor (con o sin entrenar)
-        date_today = date.today()
-        nombre_archivo_actual = "JP_12_06_VotingRegressor.pkl"
-        nombre_archivo_nuevo = f"model_{date_today}.pkl"
-        ruta_archivo_actual = os.path.join(nombre_archivo_actual)
-        ruta_archivo_nuevo = os.path.join(nombre_archivo_nuevo)
-
-        # Renombrar el archivo
-        os.rename(ruta_archivo_actual, ruta_archivo_nuevo)
-        ruta_nuevo_modelo = f'JP_12_06_VotingRegressor.pkl'
-        modelo = model
-        with open(ruta_nuevo_modelo, 'wb') as archivo:
-            pickle.dump(modelo, archivo)
-        return make_response(jsonify({'status': 'ok'}), 200)
-    except:
-        return make_response(jsonify({'status': 'Invalid'}), 401)
-
 @app.route('/new_prediction', methods=['GET'])
 def new_prediction():
     try:
@@ -126,21 +82,19 @@ def new_prediction():
         X=tabla_current_employees()
         borrar_datos_predictions()
         try:
-            # model = load_object("/opt/render/project/src/api/JP_12_06_VotingRegressor.pickle")
-            model=np.load("/opt/render/project/src/api/JP_12_06_VotingRegressor.pickle",allow_pickle=True)
+            model = load_object("/opt/render/project/src/api/JP_12_06_VotingRegressor.pickle")        
         except FileNotFoundError:
-            return "El archivo no existe."
+            return "File not found"
+        
         except:
             return "Error al leer el archivo."
         
         try:
-            #  scaler = load_object("/opt/render/project/src/api/scaler.pickle")
-            scaler=np.load("/opt/render/project/src/api/scaler.pickle",allow_pickle=True)
-        except:
-             return make_response(jsonify({'status': "Error scaler"}))
-            #  return make_response(jsonify({'status': 'Error al cargar archivos'}), 401)
+             scaler = load_object("/opt/render/project/src/api/scaler.pickle")
 
-        # Descargar el archivo JP_12_06_VotingRegressor.pickle desde GitHub
+        except:
+             return "Error scaler.pickle"
+
 
 
         columns_to_drop = ['id_employee','name', 'involvement', 'performance', 'environment', 'department', 'education', 'education_field',
@@ -151,6 +105,12 @@ def new_prediction():
         ls_new_value = model.predict(X)
         df_final = pd.DataFrame({'id_employee': ids, 'total_months_in_company': ls_new_value})
         subir_nuevos_datos_predictions(df_final)
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SET SQL_SAFE_UPDATES = 0;")
+        conn.commit()
+        cursor.close()
+        conn.close() 
         conn = get_connection()
         cursor = conn.cursor()
         cursor.execute("call prueba.actualizacion_predictions();")
