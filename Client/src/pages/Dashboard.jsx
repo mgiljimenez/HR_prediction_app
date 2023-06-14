@@ -4,8 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 const Dashboard = () => {
-
-  
   const token = localStorage.getItem("token");
   const { isLoading, error, data, isFetching } = useQuery({
     queryKey: ["graphs"],
@@ -15,39 +13,52 @@ const Dashboard = () => {
           headers: { token },
         })
         .then((res) => {
-          console.log('data ha llegado');
-         return (res.data)
+          console.log("data ha llegado");
+          return res.data;
         }),
 
-    staleTime: 4000 
-    });
+    staleTime: 4000,
+  });
 
-  if(isLoading) {
-    return <div>Cargando...</div>
+  if (isLoading) {
+    return <div>Cargando...</div>;
   }
 
-if(isFetching) {
-  console.log('Haciendo fetching');
-}
+  if (isFetching) {
+    console.log("Haciendo fetching");
+  }
 
   if (!data.length) return null;
-  console.log(data);
+
   return (
-    <div
-      className="content"
-      style={{ justifyItems: "center", alignItems: "center" }}
-    >
-      <div className="graph" key={0} style={{ display: "flex" }}>
-        <h2> Number of Attritions: {data[4].attrition}</h2>
-      </div>
-      {data.slice(0, 4).map((plot, index) => (
-        <div className="graph" key={index + 1}>
-          <Plot data={plot.data} layout={plot.layout} />
+    <div className="content">
+      <div className="graph" key={0} style={{ display: "flex" }}></div>
+
+      <div className="graph-containerUp" style={{ display: "block" }}>
+        <div className={`graph graph-1`} key={1} style={{ display: "flex",justifyContent: "center", marginRight:"200px", marginLeft:"400px" }}>
+          <Plot data={data[0].data} layout={data[0].layout} />
+          <div className="attrition">
+            <h3>Nº of Attritions: </h3>
+            <h1 style={{paddingLeft:"40px"}}>{data[4].attrition}</h1>
+          </div>
         </div>
-      ))}
-      <div className="predictionandtraining">
-        <button>TRAINING MODEL</button>
+        <div className={`graph graph-2`} key={2} style={{ display: "flex", justifyContent: "center", marginRight:"450px" }}>
+          <Plot data={data[1].data} layout={data[1].layout} />
+        </div>
+      </div>
+      <div className="graph-container" style={{ display: "flex" }}>
+        <div className={`graph graph-3`} key={3}>
+          <Plot data={data[2].data} layout={data[2].layout} />
+        </div>
+        <div className={`graph graph-4`} key={4}>
+          <Plot data={data[3].data} layout={data[3].layout} />
+        </div>
+      </div>
+
+      <div className="predictionandtraining" style={{ display: "flex", justifyContent: "center", marginBottom:"50px" }}>
+        <button>TRAINING MODEL</button> 
         <button>NEW PREDICTION</button>
+        
       </div>
     </div>
   );

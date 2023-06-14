@@ -21,12 +21,12 @@ function Login() {
             <div className="loginImage"></div>
             <div className="loginForm">
               <Form
-                header={"Iniciar Sesión"}
+                header={"Sign In"}
                 inputs={[
                   { name: "email", label: "Email" },
                   { name: "password", label: "Password", type: "password" },
                 ]}
-                submitLabel="Iniciar"
+                submitLabel="Sign In"
                 onSubmit={handleLogin}
               />
             </div>

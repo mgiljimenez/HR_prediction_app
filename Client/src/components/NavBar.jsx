@@ -79,12 +79,13 @@ if (event.key === 'Enter') {
           <Link
           style={{color:'#1D3557'}}
           to="/ranking">Ranking</Link>
+            <Link 
+          style={{color:'#1D3557'}}
+          to="/settings">Notifications</Link>
           <Link 
           style={{color:'#1D3557'}}
           to="/logout">LogOut</Link>
-           <Link 
-          style={{color:'#1D3557'}}
-          to="/settings">Notifications</Link>
+         
           {/* <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -94,8 +95,9 @@ if (event.key === 'Enter') {
             onKeyDown={handleSearch}
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
-            />
+            />         
           </Search> */}
+
         </Toolbar>
       </AppBar>
     </Box>
