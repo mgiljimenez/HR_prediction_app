@@ -11,6 +11,7 @@ from datetime import date
 import jwt
 import requests
 import joblib
+import numpy as np
 
 load_dotenv()
 private_key = os.getenv("private_key")
@@ -33,9 +34,9 @@ app = Flask(__name__)
 CORS(app, support_credentials=True)
 
 
-def load_object(filename):
-    loaded = joblib.load(filename)
-    return loaded
+# def load_object(filename):
+#     loaded = joblib.load(filename)
+#     return loaded
 #Funciones necesarias para ejecutar el retrain y new_prediction
 #Funciones individuales que atacan a la base de datos
 def tabla_current_employees():
@@ -125,14 +126,16 @@ def new_prediction():
         X=tabla_current_employees()
         borrar_datos_predictions()
         try:
-            model = load_object("/opt/render/project/src/api/JP_12_06_VotingRegressor.pickle")
+            # model = load_object("/opt/render/project/src/api/JP_12_06_VotingRegressor.pickle")
+            model=np.load("/opt/render/project/src/api/JP_12_06_VotingRegressor.pickle",allow_pickle=True)
         except FileNotFoundError:
             return "El archivo no existe."
         except:
             return "Error al leer el archivo."
         
         try:
-             scaler = load_object("/opt/render/project/src/api/scaler.pickle")
+            #  scaler = load_object("/opt/render/project/src/api/scaler.pickle")
+            scaler=np.load("/opt/render/project/src/api/scaler.pickle",allow_pickle=True)
         except:
              return make_response(jsonify({'status': "Error scaler"}))
             #  return make_response(jsonify({'status': 'Error al cargar archivos'}), 401)
