@@ -124,7 +124,7 @@ def new_prediction():
              model = load_object("JP_12_06_VotingRegressor.pickle")
              scaler = load_object("scaler.pickle")
         except:
-             return make_response(jsonify({'status': os.getcwd(),"listdir":os.listdir()}), 401)
+             return make_response(jsonify({'status': os.getcwd()}), 401)
             #  return make_response(jsonify({'status': 'Error al cargar archivos'}), 401)
         columns_to_drop = ['id_employee','name', 'involvement', 'performance', 'environment', 'department', 'education', 'education_field',
                 'gender', 'role', 'years_curr_manager','total_working_years', 'last_promotion', 'age', 'years_company']
