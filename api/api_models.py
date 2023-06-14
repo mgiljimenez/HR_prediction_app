@@ -125,14 +125,12 @@ def new_prediction():
         X=tabla_current_employees()
         borrar_datos_predictions()
         try:
-             os.read
-             model = load_object("/opt/render/project/src/api/JP_12_06_VotingRegressor.pickle")
+            model = load_object("/opt/render/project/src/api/JP_12_06_VotingRegressor.pickle")
+        except FileNotFoundError:
+            return "El archivo no existe."
         except:
-            def obtener_ruta_archivo(nombre_archivo):
-                ruta_absoluta = os.path.abspath(nombre_archivo)
-                return ruta_absoluta
-            alfa=obtener_ruta_archivo("JP_12_06_VotingRegressor.pickle")
-            return make_response(jsonify({'status': alfa}), 401)
+            return "Error al leer el archivo."
+        
         try:
              scaler = load_object("/opt/render/project/src/api/scaler.pickle")
         except:
