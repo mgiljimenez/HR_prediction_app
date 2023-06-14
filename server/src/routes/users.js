@@ -31,7 +31,7 @@ router.get("/", async (req, res) => {
     console.error("Error al ejecutar la consulta SQL:", error);
     res.status(500).json({ error: "Error al obtener los datos" });
   } finally {
-    pool.end(); // Cerrar conexión a la base de datos
+    // pool.end(); // Cerrar conexión a la base de datos
   }
 });
 
@@ -70,7 +70,7 @@ router.post(
       console.error(error);
       res.status(500).json({ message: "Error al registrar el usuario" });
     } finally {
-      pool.end(); // Cerrar conexión a la base de datos
+      // pool.end(); // Cerrar conexión a la base de datos
     }
   }
 );
@@ -131,7 +131,7 @@ router.post(
       console.error(error);
       res.status(500).json({ message: "Error en el inicio de sesión" });
     } finally {
-      pool.end(); // Cerrar conexión a la base de datos
+      // pool.end(); // Cerrar conexión a la base de datos
     }
   }
 );
@@ -162,7 +162,7 @@ router.put("/settings", isAuth, bodyParser.json(), async (req, res) => {
       .status(500)
       .json({ message: "Error al actualizar la configuración del usuario" });
   } finally {
-    pool.end(); // Cerrar conexión a la base de datos
+    // pool.end(); // Cerrar conexión a la base de datos
   }
 });
 
@@ -178,7 +178,7 @@ router.get("/account", isAuth, bodyParser.json(), async (req, res) => {
     console.error(error);
     res.status(500).json({ message: "Error al obtener los datos del usuario" });
   } finally {
-    pool.end(); // Cerrar conexión a la base de datos
+    // pool.end(); // Cerrar conexión a la base de datos
   }
 });
 
