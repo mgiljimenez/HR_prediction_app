@@ -125,6 +125,7 @@ def new_prediction():
         X=tabla_current_employees()
         borrar_datos_predictions()
         try:
+             os.read
              model = load_object("/opt/render/project/src/api/JP_12_06_VotingRegressor.pickle")
         except:
             def obtener_ruta_archivo(nombre_archivo):
@@ -158,6 +159,29 @@ def new_prediction():
         return make_response(jsonify({'status': 'ok'}), 200)
     except:
         return make_response(jsonify({'status': "error interno"}), 500)
+
+@app.route('/new_txt', methods=['GET'])
+def new_txt():
+    def leer_archivo(nombre_archivo):
+        try:
+            with open(nombre_archivo, 'r') as archivo:
+                contenido = archivo.read()
+                return contenido
+        except FileNotFoundError:
+            return "El archivo no existe."
+        except:
+            return "Error al leer el archivo."
+    # Ejemplo de uso
+    nombre_archivo = "api/prueba.txt"
+    contenido = leer_archivo(nombre_archivo)
+    return make_response(jsonify({'txt': contenido}), 200)
+
+
+
+
+
+
+
 
 
 if __name__ == '__main__':
