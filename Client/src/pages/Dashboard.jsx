@@ -5,6 +5,7 @@ import axios from "axios";
 
 const Dashboard = () => {
 
+  
   const token = localStorage.getItem("token");
   const { isLoading, error, data, isFetching } = useQuery({
     queryKey: ["graphs"],
