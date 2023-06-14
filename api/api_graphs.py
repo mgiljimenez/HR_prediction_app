@@ -95,6 +95,7 @@ def create_graph_pie(df_graph_pie):
         )
     ])
     fig.update_traces(textfont=dict(size=22))
+    x_order = ["Low", "Medium", "High", "Very high"]
     fig.update_layout(
         title="Distribution risk attrition",
         title_font=dict(size=24),
@@ -103,7 +104,9 @@ def create_graph_pie(df_graph_pie):
             yanchor="bottom",
             y=1.02,
             xanchor="center",
-            x=0.5
+            x=0.5,
+            font=dict(size=20),
+            traceorder='normal'
         ),
         width=600,
         height=400,
@@ -115,6 +118,10 @@ def create_graph_pie(df_graph_pie):
         title_font_color="#1D3557",
         legend_title_font_color="#1D3557"
     )
+
+    fig.update_traces(order=x_order, legendgroup='group1')
+
+
     json_data= plotly.io.to_json(fig)
     parsed_json = (json.loads(json_data)) 
     return parsed_json
