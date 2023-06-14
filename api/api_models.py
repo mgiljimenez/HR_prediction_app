@@ -127,7 +127,7 @@ def new_prediction():
         try:
              model = load_object("JP_12_06_VotingRegressor.pickle")
         except:
-             return make_response(jsonify({'status': os.getcwd()}), 401)
+             return make_response(jsonify({'status': os.getcwd()+"/"+"JP_12_06_VotingRegressor.pickle"}), 401)
         try:
              scaler = load_object("scaler.pickle")
         except:
