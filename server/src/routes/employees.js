@@ -22,7 +22,7 @@ router.get("/", isAuth, async (req, res) => {
     console.error("Error al ejecutar la consulta SQL:", error);
     res.status(500).json({ error: "Error al obtener los datos" });
   } finally {
-    pool.end(); // Cerrar conexión a la base de datos
+    // pool.end(); // Cerrar conexión a la base de datos
   }
 });
 
@@ -39,7 +39,7 @@ router.get("/:id", isAuth, async (req, res) => {
     console.error("Error al ejecutar la consulta SQL:", error);
     res.status(500).json({ error: "Error al obtener los datos" });
   } finally {
-    pool.end(); // Cerrar conexión a la base de datos
+    // pool.end(); // Cerrar conexión a la base de datos
   }
 });
 
@@ -56,7 +56,7 @@ router.get("/role/:role", isAuth, async (req, res) => {
     console.error("Error al ejecutar la consulta SQL:", error);
     res.status(500).json({ error: "Error al obtener los datos" });
   } finally {
-    pool.end(); // Cerrar conexión a la base de datos
+    // pool.end(); // Cerrar conexión a la base de datos
   }
 });
 
@@ -73,7 +73,7 @@ router.get("/name/:name", isAuth, async (req, res) => {
     console.error("Error al ejecutar la consulta SQL:", error);
     res.status(500).json({ error: "Error al obtener los datos" });
   } finally {
-    pool.end(); // Cerrar conexión a la base de datos
+    // pool.end(); // Cerrar conexión a la base de datos
   }
 });
 
