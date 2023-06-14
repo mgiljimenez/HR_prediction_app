@@ -26,6 +26,7 @@
     "@tanstack/react-query-persist-client": "^4.29.12",
     "axios": "^1.4.0",
     "framer-motion": "^10.12.16",
+    
     "icons": "^1.0.0",
     "jsonwebtoken": "^9.0.0",
     "plotly": "^1.0.6",

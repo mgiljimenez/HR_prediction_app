@@ -20,6 +20,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     client={queryClient}
     persistOptions={{ persister }}
   >
+    
     <AuthProvider>
       <RouterProvider router={router} />
       <ReactQueryDevtools />
