@@ -172,15 +172,9 @@ def new_txt():
         except:
             return "Error al leer el archivo."
     # Ejemplo de uso
-    nombre_archivo = "api/prueba.txt"
+    nombre_archivo = "/opt/render/project/src/api/prueba.txt"
     contenido = leer_archivo(nombre_archivo)
     return make_response(jsonify({'txt': contenido}), 200)
-
-
-
-
-
-
 
 
 
