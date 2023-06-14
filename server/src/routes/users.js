@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const { body, validationResult } = require("express-validator");
 const bodyParser = require("body-parser");
 const isAuth = require("../middlewares/isAuth");
+
 // Validación de datos para la ruta '/signup'
 const validateSignupData = [
   body("name").notEmpty().withMessage("El nombre es obligatorio"),
@@ -19,8 +20,7 @@ const validateSigninData = [
   body("password").notEmpty().withMessage("La contraseña es obligatoria"),
 ];
 
-// GET ALL USER//////////
-
+// GET ALL USERS
 router.get("/", async (req, res) => {
   try {
     const sql = "SELECT * FROM prueba.registro";
@@ -30,6 +30,8 @@ router.get("/", async (req, res) => {
   } catch (error) {
     console.error("Error al ejecutar la consulta SQL:", error);
     res.status(500).json({ error: "Error al obtener los datos" });
+  } finally {
+    pool.end(); // Cerrar conexión a la base de datos
   }
 });
 
@@ -67,6 +69,8 @@ router.post(
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Error al registrar el usuario" });
+    } finally {
+      pool.end(); // Cerrar conexión a la base de datos
     }
   }
 );
@@ -126,33 +130,56 @@ router.post(
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Error en el inicio de sesión" });
+    } finally {
+      pool.end(); // Cerrar conexión a la base de datos
     }
   }
 );
 
-// PUT////////
-
+// UPDATE USER SETTINGS
 router.put("/settings", isAuth, bodyParser.json(), async (req, res) => {
   console.log(req.body);
-
   console.log(req.user);
 
   const { notification1, notification2, notification3 } = req.body;
 
-  const [rows] = await pool.query(
-    "UPDATE registro SET Notificacion1 = ?, Notificacion2 = ?, Notificacion3 = ? WHERE id = ?",
-    [notification1, notification2, notification3, req.user.id]
-  );
+  try {
+    const [rows] = await pool.query(
+      "UPDATE registro SET Notificacion1 = ?, Notificacion2 = ?, Notificacion3 = ? WHERE id = ?",
+      [notification1, notification2, notification3, req.user.id]
+    );
+
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "GET, POST, PATCH, PUT, DELETE, OPTIONS"
+    );
+
+    res.status(200).json({ message: "Configuración de usuario actualizada" });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Error al actualizar la configuración del usuario" });
+  } finally {
+    pool.end(); // Cerrar conexión a la base de datos
+  }
 });
 
-// GET USER DATA////////
-
+// GET USER DATA
 router.get("/account", isAuth, bodyParser.json(), async (req, res) => {
-  const [rows] = await pool.query("SELECT * FROM registro WHERE id = ?", [
-    req.user.id,
-  ]);
+  try {
+    const [rows] = await pool.query("SELECT * FROM registro WHERE id = ?", [
+      req.user.id,
+    ]);
 
-  res.status(200).json(rows[0]);
+    res.status(200).json(rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error al obtener los datos del usuario" });
+  } finally {
+    pool.end(); // Cerrar conexión a la base de datos
+  }
 });
 
 module.exports = router;
