@@ -121,9 +121,11 @@ def new_prediction():
         # jwt.decode(token, private_key, algorithms=["HS256"])
         X=tabla_current_employees()
         borrar_datos_predictions()
-
-        model=importar_modelo()
-        scaler=importar_scaler()
+        try:
+            model=importar_modelo()
+            scaler=importar_scaler()
+        except:
+            return make_response(jsonify({'status': "error cargar modelo y scaler"}), 500)
 
         columns_to_drop = ['id_employee','name', 'involvement', 'performance', 'environment', 'department', 'education', 'education_field',
                 'gender', 'role', 'years_curr_manager','total_working_years', 'last_promotion', 'age', 'years_company']
