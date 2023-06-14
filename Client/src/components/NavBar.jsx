@@ -67,7 +67,7 @@ if (event.key === 'Enter') {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <img className='logo'src="Logo.png" alt="" />
+          <img className='logo'src="/Logo.png" alt="" />
           <Typography
             variant="h6"
             noWrap
