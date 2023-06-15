@@ -79,7 +79,8 @@ const Dashboard = () => {
             <h1 style={{ paddingLeft: "40px" }}>{data[4].attrition}</h1>
           </div> */}
         </div>
-         { <h2 style={{ marginLeft: "530px", maxWidth: "315px", padding:'35px', border: "2px, solid, yellow", backgroundColor:"rgba(218, 218, 218, 0.4)", borderRadius:"15px", color:"#1d3557"}}>
+         { <h2 className="h2attrition"
+         style={{ marginLeft: "540px", maxWidth: "315px", padding:'35px', backgroundColor:"rgba(218, 218, 218, 0.2)", borderRadius:"15px", color:"#1d3557"}}>
         Number of attritions : {data[4].attrition}{" "}
       </h2> }
         <div
