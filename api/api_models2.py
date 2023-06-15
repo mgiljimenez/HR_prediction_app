@@ -222,7 +222,7 @@ def retrain():
             return make_response(jsonify({'status': 'ok'}), 200)
 
         except Exception as e:
-            return f"Error: {e}"
+            return f"Error notificado: {e}"
     except:
         return make_response(jsonify({'status': 'Invalid'}), 401)
 
