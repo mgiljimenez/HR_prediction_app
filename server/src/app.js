@@ -48,13 +48,13 @@ async function sendNotification(email, body) {
   }
 }
 
-// Cada cinco segundos envía un correo a los que tienen la Notificación 2 activa
-cron.schedule('*/5 * * * *', async () => {
+// Cada dos minutos envía un correo a los que tienen la Notificación activa
+cron.schedule('*/2 * * * *', async () => {
   try {
     const [rows] = await pool.query("SELECT email FROM registro WHERE Notificacion2 = ?", [1]);
 
     rows.forEach(async (u) => {
-      await sendNotification(u.email, "Esta es una notificación muy importante");
+      await sendNotification(u.email, "Subject: Risk of losing valuable employees: Act now! Recognize, engage, develop, and retain for a thriving workplace. Address concerns promptly.");
     });
   } catch (error) {
     console.error("Error al obtener los correos para enviar notificaciones:", error);
