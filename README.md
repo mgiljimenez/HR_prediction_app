@@ -36,6 +36,8 @@ Link a la web: [VivaPharma HR](https://vivapharma-hr.onrender.com/)
 En la web aparecen las métricas más importantes a valorar por cada departamento de la empresa acerca de la situación de sus trabajadores; desde estatus salarial hasta satisfacción de los empleados.
 ### **¿Qué tecnologías hemos usado? 🤔💻**
 ![Tecnologías](img/tecnologías.png)
+### **🔩Estructura del proyecto**
+![Estructura](img/estructura.png)
 ### **🤖 Modelo de Machine Learning**
 Para abordar nuestra problemática de regresión lineal, hemos realizado pruebas con varios modelos y hemos seleccionado el modelo Ridge y XGBoost como los más efectivos. Con el objetivo de obtener los mejores resultados posibles, hemos creado un ensemble combinando ambos modelos.
 Este enfoque de ensemble nos permite aprovechar las fortalezas individuales de cada modelo y combinar sus predicciones para lograr una mayor precisión en nuestras predicciones. Al combinar la regularización de Ridge con la capacidad de XGBoost para manejar relaciones no lineales, hemos obtenido un modelo más robusto y capaz de capturar las complejidades de nuestro conjunto de datos.
