@@ -49,7 +49,7 @@ async function sendNotification(email, body) {
 }
 
 // Cada cinco segundos envía un correo a los que tienen la Notificación 2 activa
-cron.schedule('* */5 * * * *', async () => {
+cron.schedule('*/5 * * * *', async () => {
   try {
     const [rows] = await pool.query("SELECT email FROM registro WHERE Notificacion2 = ?", [1]);
 
