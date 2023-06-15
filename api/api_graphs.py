@@ -45,7 +45,7 @@ def create_graph_line(df):
     '''
     counts = df['months_left'].value_counts().sort_index()
     counts_filtered = counts.loc[(counts.index >= 0) & (counts.index <= 25)] # Filtro para 24 meses
-    fig = px.line(x=counts_filtered.index, y=counts_filtered.values, title="Prediction attrition for next 24 months") # Gráfica de series de tiempo
+    fig = px.line(x=counts_filtered.index, y=counts_filtered.values, title="Attrition prediction for next 24 months") # Gráfica de series de tiempo
 
     fig.update_traces(line_width=3, mode='lines+markers', hovertemplate='Month: %{x}<br>Nº of attrition: %{y}')  
 
@@ -53,8 +53,8 @@ def create_graph_line(df):
         tickmode='array',
         tickvals=counts_filtered.index,
         ticktext=counts_filtered.index
-    ), xaxis_title="next 24 months", 
-    yaxis_title="Nº of attrition", 
+    ), xaxis_title="", 
+    yaxis_title="Nº of attritions", 
     title_x=0.5, 
     title_font={'size': 24},
     width=840,
@@ -97,7 +97,7 @@ def create_graph_pie(df_graph_pie):
     fig.update_traces(textfont=dict(size=22))
 
     fig.update_layout(
-        title="Distribution risk attrition",
+        title="Attrition risk distribution",
         title_font=dict(size=24),
         legend=dict(
             orientation="h",
@@ -154,11 +154,12 @@ def create_graph_bar1(df):
 
         fig.update_layout(
             title={
-                'text': 'Distribution risk attrition by job role',
+                'text': 'Distribution by position',
                 'font': {'size': 24}
             },
             xaxis=dict(title='Porcentaje'),
-            yaxis=dict(title='JobRole'),
+            yaxis=dict(title='JobRole',
+                        title_font={'size': 24}),
             barmode='stack',
             autosize=False,
             width=600,
@@ -210,11 +211,12 @@ def create_graph_bar2(df):
     # Tamaño de figura adaptado a la web
     fig.update_layout(
         title={
-            'text': 'Distribution risk attrition by job level',
+            'text': 'Distribution by job level',
             'font': {'size': 24}
         },
         xaxis=dict(title=''),
-        yaxis=dict(title='Job Level'),
+        yaxis=dict(title='Job Level',
+                    title_font={'size': 24}),
         barmode='stack',
         autosize=False,
         width=600,
