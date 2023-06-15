@@ -74,7 +74,6 @@ const columns = [
           break;
         case "Bad":
           backgroundColor = "#DB4437";
-          color= "#FFFFFF";
           break;
         default:
           backgroundColor = "black";
