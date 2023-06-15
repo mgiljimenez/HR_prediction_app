@@ -81,10 +81,10 @@ def create_graph_pie(df_graph_pie):
         "Very high": "#DB4437"
     }
     count_values = {    
-        "Low": 918,
-        "Medium": 898,
-        "High": 951,
-        "Very high": 931
+        "Low": 951,
+        "Medium": 931,
+        "High": 918,
+        "Very high": 898
     }
     fig = go.Figure(data=[
         go.Pie(
@@ -98,7 +98,7 @@ def create_graph_pie(df_graph_pie):
     fig.update_traces(textfont=dict(size=22))
 
     fig.update_layout(
-        title="Attrition risk distribution",
+        title="",
         title_font=dict(size=24),
         legend=dict(
             orientation="h",
