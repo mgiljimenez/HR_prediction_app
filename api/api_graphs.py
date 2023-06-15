@@ -80,11 +80,11 @@ def create_graph_pie(df_graph_pie):
         "High": "#FABC09",
         "Very high": "#DB4437"
     }
-    count_values = {
-        "High": 951,
-        "Very high": 931,
+    count_values = {    
         "Low": 918,
-        "Medium": 898
+        "Medium": 898,
+        "High": 951,
+        "Very high": 931
     }
     fig = go.Figure(data=[
         go.Pie(
