@@ -113,7 +113,7 @@ function Employee() {
             <div className="rightUp">
               <div className="prediction" style={{ display: "flex" }}>
                 <div className="risk">
-                 <h4>PREDICTION RISK</h4> 
+                 <h4>ATTRITION RISK</h4> 
                   <span style={{marginLeft:'20px'}}>{employee.risk}</span>
                 </div>
                 <div className="month">
@@ -154,7 +154,7 @@ function Employee() {
                         component="th"
                         scope="row"
                       >
-                        Job Involving
+                        Job Involvement
                       </TableCell>
                       <TableCell
                         align="center"
