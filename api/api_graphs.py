@@ -1,4 +1,4 @@
-#Importamos la librerías y variables necesarias
+#Importamos la librerías
 from mysql.connector import pooling
 import pandas as pd
 from flask import Flask, request, jsonify, abort, make_response
@@ -12,6 +12,7 @@ import json
 import numpy as np
 import jwt
 
+#Cargamos las variables de entorno
 load_dotenv()
 private_key = os.getenv("private_key")
 db_host=os.getenv("db_host")
@@ -19,7 +20,7 @@ db_user=os.getenv("db_user")
 db_password=os.getenv("db_password")
 db_database=os.getenv("db_database")
 
-# Configura el pool de conexiones
+# Configuracion el pool de conexiones
 dbconfig = {
     "host": db_host,
     "user": db_user,
@@ -31,9 +32,8 @@ connection_pool = pooling.MySQLConnectionPool(pool_name="mypool", pool_size=2, *
 def get_connection():
     return connection_pool.get_connection()
 
-
+#Configuración del Flask y del CORS
 app = Flask(__name__)
-# app.config['DEBUG'] = True
 CORS(app, support_credentials=True)
 
 
@@ -71,6 +71,7 @@ def create_graph_line(df):
 
 
 def create_graph_pie(df_graph_pie):
+    """Función que devuelve un json con la gráfica pie"""
     count_values = df_graph_pie.value_counts()
     # Estética de la gráfica
     colors = {
@@ -127,6 +128,7 @@ def create_graph_pie(df_graph_pie):
 
 
 def create_graph_bar1(df):
+        """Función que devuelve un json con la gráfica bar1"""
         df_agg = df.groupby(['role', 'risk']).size().reset_index(name='count')
         df_agg['percentage'] = df_agg.groupby('role')['count'].apply(lambda x: (x / x.sum()) * 100)
 
@@ -178,11 +180,7 @@ def create_graph_bar1(df):
         return parsed_json
 
 def create_graph_bar2(df):
-    '''
-    Endpoint que devuelve un gráfico de barras en función de riesgo
-    y nivel de trabajo a partir de una query a la BD y lo devuelve
-    en formato json
-    '''
+    """Función que devuelve un json con la gráfica bar2"""
     df_agg = df.groupby(['job_level', 'risk']).size().reset_index(name='count')
     df_agg['percentage'] = df_agg.groupby('job_level')['count'].apply(lambda x: (x / x.sum()) * 100) # Agrupación para calcular el porcentaje sobre el total
 
@@ -235,6 +233,7 @@ def create_graph_bar2(df):
     return parsed_json
 
 def get_graph_gauge(df, id):
+    """Función que devuelve un json con la gráfica gauge en función del id del empleado"""
     num_steps = 100 
     risk_mapping = {'Bad': 13, 'Good': 38, 'Better': 63, 'Best':88}
     df['balance_value'] = df['life_balance'].map(risk_mapping)
@@ -284,16 +283,20 @@ def get_graph_gauge(df, id):
     parsed_json = (json.loads(json_data)) 
     return parsed_json
 
+#Configucacion de la conexion a la base de datos para traer la vista replacement
 connection = get_connection()
 cursor = connection.cursor()
 cursor.execute("SELECT * from replacement")
 resultado = cursor.fetchall()
 column_names = [desc[0] for desc in cursor.description] 
 df_replacement = pd.DataFrame(resultado, columns=column_names)
+cursor.close()
+connection.close()
 
 
 @app.route('/graphs', methods=['GET'])
 def get_all_data():
+    """Endpoint que devuelve un array de json que incluye todos los datos de las gráficas"""
     try:
         token=request.headers.get('token')
         jwt.decode(token, private_key, algorithms=["HS256"])
@@ -324,6 +327,7 @@ def get_all_data():
 
 @app.route('/db/graph/gauge', methods=['GET'])
 def endpoint_gauge():
+    """Endpoint que devuelve el grafico gauge para la vista personal"""
     try:
         token=request.headers.get('token')
         jwt.decode(token, private_key, algorithms=["HS256"])
@@ -337,5 +341,6 @@ def endpoint_gauge():
     except:
         abort(500)
 
+#Ejecuta la app
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
