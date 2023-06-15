@@ -122,6 +122,8 @@ margin-top: 30px;
   /* margin:30px; */
   padding: 10px 20px;
   border-radius: 5px;
+  letter-spacing: 2px;
+justify-content: center;
 }
 
 .MuiToolbar-root {
@@ -327,3 +329,4 @@ margin-left: 400px;
   font-size: 20px;
   margin-bottom:20px;
 }
+

@@ -33,7 +33,7 @@ function Settings() {
       className="notifications"
       header={<h1 style={{ fontSize: "40px" }}>Notification Management</h1>}
         inputs={[
-          { name: "notification1", label: "Monthly Employee Status" , type: "checkbox", style: {width: "15px", height: "15px" }},
+          { name: "notification1", label: "Monthly Employees Status" , type: "checkbox", style: {width: "15px", height: "15px" }},
           { name: "notification2", label: "Employees Status Update", type: "checkbox", style: { width: "15px", height: "15px" } },
           { name: "notification3", label: "Weekly Employees Status", type: "checkbox", style: { width: "15px", height: "15px" } },
         ]}

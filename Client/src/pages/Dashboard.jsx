@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { Center } from "@chakra-ui/react";
 
 const Dashboard = () => {
+  const [message, setMessage] = useState('');
   const token = localStorage.getItem("token");
   const { isLoading, error, data, isFetching } = useQuery({
     queryKey: ["graphs"],
@@ -13,25 +15,35 @@ const Dashboard = () => {
           headers: { token },
         })
         .then((res) => {
-          console.log("data ha llegado");
+          console.log(res.data);
           return res.data;
         }),
 
     staleTime: 4000,
   });
 
-/* funcion prediccion */
+  /* funcion prediccion */
 
   const handlePredictionClick = () => {
-    fetch("https://api-hr-models.onrender.com/new_prediction", { headers: { token },
-  })
-      .then(response => response.json())
-      .then(predictionData => {
-        // Realiza cualquier acción adicional con los datos de predicción recibidos
-        console.log(predictionData);
+    setMessage("Loading");
+    fetch("https://api-hr-models.onrender.com/new_prediction", {
+      headers: { token },
+    })
+    
+      .then((response) => {
+        console.log('1');
+        
+        return response.json();
       })
-      .catch(error => {
-        console.error('Error:', error);
+      .then((predictionData) => {
+        console.log('2');
+        console.log(predictionData);
+        // Realiza cualquier acción adicional con los datos de predicción recibidos
+        setMessage(predictionData.message);
+       
+      })
+      .catch((error) => {
+        console.error("Error:", error);
       });
   };
 
@@ -48,17 +60,40 @@ const Dashboard = () => {
   return (
     <div className="content">
       <div className="graph" key={0} style={{ display: "flex" }}></div>
-
+     
       <div className="graph-containerUp" style={{ display: "block" }}>
-        <div className={`graph graph-1`} key={1} style={{ display: "flex",justifyContent: "center", marginRight:"200px", marginLeft:"400px" }}>
+        <div
+          className={`graph graph-1`}
+          key={1}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginRight: "200px",
+            marginLeft: "200px",
+          }}
+        >
           <Plot data={data[0].data} layout={data[0].layout} />
-          <div className="attrition">
+          
+          {/* <div className="attrition">
             <h3>Nº of Attritions: </h3>
-            <h1 style={{paddingLeft:"40px"}}>{data[4].attrition}</h1>
-          </div>
+            <h1 style={{ paddingLeft: "40px" }}>{data[4].attrition}</h1>
+          </div> */}
         </div>
-        <div className={`graph graph-2`} key={2} style={{ display: "flex", justifyContent: "center", marginRight:"450px" }}>
+         { <h2 style={{ marginLeft: "530px", maxWidth: "315px", padding:'35px', border: "2px, solid, yellow", backgroundColor:"rgba(218, 218, 218, 0.4)", borderRadius:"15px", color:"#1d3557"}}>
+        Number of attritions : {data[4].attrition}{" "}
+      </h2> }
+        <div
+          className={`graph graph-2`}
+          key={2}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginRight: "450px",
+          }}
+          
+        >
           <Plot data={data[1].data} layout={data[1].layout} />
+          
         </div>
       </div>
       <div className="graph-container" style={{ display: "flex" }}>
@@ -70,10 +105,29 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="predictionandtraining" style={{ display: "flex", justifyContent: "center", marginBottom: "50px" }}>
-        <button onClick={handlePredictionClick}>PREDICTION</button>
+      <div
+        className="predictionandtraining"
+        style={{
+          display: "grid",
+          placeContent: "center",
+          justifyContent: "center",
+          marginBottom: "50px",
+        }}
+      >
+        {message == "Loading" ? (
+          <p>{message}</p>
+        ) : message == "OK" ? (
+          <p>DataBase Updated</p>
+        ) : (
+          ""
+        )}
+        <button
+          onClick={handlePredictionClick}
+          style={{ padding: "10px", backgroundColor: "transparent" }}
+        >
+          PREDICTION
+        </button>
       </div>
-
     </div>
   );
 };
