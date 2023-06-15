@@ -45,7 +45,7 @@ def create_graph_line(df):
     '''
     counts = df['months_left'].value_counts().sort_index()
     counts_filtered = counts.loc[(counts.index >= 0) & (counts.index <= 25)] # Filtro para 24 meses
-    fig = px.line(x=counts_filtered.index, y=counts_filtered.values, title="Attrition prediction for next 24 months") # Gráfica de series de tiempo
+    fig = px.line(x=counts_filtered.index, y=counts_filtered.values, title="") # Gráfica de series de tiempo
 
     fig.update_traces(line_width=3, mode='lines+markers', hovertemplate='Month: %{x}<br>Nº of attrition: %{y}')  
 
@@ -98,7 +98,7 @@ def create_graph_pie(df_graph_pie):
     fig.update_traces(textfont=dict(size=22))
 
     fig.update_layout(
-        title="",
+        title="Attrition risk distribution",
         title_font=dict(size=24),
         legend=dict(
             orientation="h",
