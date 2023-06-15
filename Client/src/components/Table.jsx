@@ -74,6 +74,7 @@ const columns = [
           break;
         case "Bad":
           backgroundColor = "#DB4437";
+          color= "#FFFFFF";
           break;
         default:
           backgroundColor = "black";
@@ -98,6 +99,7 @@ const columns = [
       switch (value) {
         case "Very High":
           backgroundColor = "#0F9D58";
+          
           break;
         case "High":
           backgroundColor = "#FFFF00";
