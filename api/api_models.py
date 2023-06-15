@@ -3,18 +3,12 @@ from mysql.connector import pooling
 import pandas as pd
 from flask import Flask, request, jsonify, abort, make_response
 from flask_cors import CORS
-from dotenv import load_dotenv
 import os
 import pickle
 from sklearn.preprocessing import StandardScaler
-from datetime import date
 import jwt
-import requests
-import joblib
 import numpy as np
-
-load_dotenv()
-private_key = os.getenv("private_key")
+from xgboost import XGBRegressor
 
 # Configura el pool de conexiones
 dbconfig = {
@@ -33,10 +27,6 @@ app = Flask(__name__)
 # app.config['DEBUG'] = True
 CORS(app, support_credentials=True)
 
-
-def load_object(filename):
-    loaded = joblib.load(filename)
-    return loaded
 #Funciones necesarias para ejecutar el retrain y new_prediction
 #Funciones individuales que atacan a la base de datos
 def tabla_current_employees():
@@ -74,25 +64,25 @@ def subir_nuevos_datos_predictions(df_final):
         cursor.close()
         conn.close()
 
-def importar_modelo():
-    try:
-        # Crea un cursor para ejecutar las consultas
-        conn = get_connection()
-        cursor = conn.cursor()
-        # Recupera el modelo serializado desde la base de datos
-        consulta = "SELECT modelo FROM modelos WHERE id = (SELECT MAX(id) FROM modelos)"
-        cursor.execute(consulta)
-        # Obtiene el modelo serializado
-        modelo_serializado = cursor.fetchone()[0]
-        # Carga el modelo desde los datos serializados
-        modelo_cargado = pickle.loads(modelo_serializado)
-        return modelo_cargado
-    except Exception as e:
-        return make_response(jsonify({'Error': e}), 500)
-    finally:
-        # Cierra la conexión
-        cursor.close()
-        conn.close()
+# def importar_modelo():
+#     try:
+#         # Crea un cursor para ejecutar las consultas
+#         conn = get_connection()
+#         cursor = conn.cursor()
+#         # Recupera el modelo serializado desde la base de datos
+#         consulta = "SELECT modelo FROM modelos WHERE id = (SELECT MAX(id) FROM modelos)"
+#         cursor.execute(consulta)
+#         # Obtiene el modelo serializado
+#         modelo_serializado = cursor.fetchone()[0]
+#         # Carga el modelo desde los datos serializados
+#         modelo_cargado = pickle.loads(modelo_serializado)
+#         return modelo_cargado
+#     except Exception as e:
+#         return e
+#     finally:
+#         # Cierra la conexión
+#         cursor.close()
+#         conn.close()
 
 def importar_scaler():
     try:
@@ -121,8 +111,25 @@ def new_prediction():
         # jwt.decode(token, private_key, algorithms=["HS256"])
         X=tabla_current_employees()
         borrar_datos_predictions()
+
         try:
-            model=importar_modelo()
+            # Crea un cursor para ejecutar las consultas
+            conn = get_connection()
+            cursor = conn.cursor()
+            # Recupera el modelo serializado desde la base de datos
+            consulta = "SELECT modelo FROM modelos WHERE id = (SELECT MAX(id) FROM modelos)"
+            cursor.execute(consulta)
+            # Obtiene el modelo serializado
+            modelo_serializado = cursor.fetchone()[0]
+            # Carga el modelo desde los datos serializados
+            model = pickle.loads(modelo_serializado)
+        except Exception as e:
+            return f"error 134: {e}"
+        finally:
+            # Cierra la conexión
+            cursor.close()
+            conn.close()
+        try:
             scaler=importar_scaler()
         except Exception as e:
             return f"error cargar modelos, {e}"
@@ -147,7 +154,7 @@ def new_prediction():
         conn.commit()
         cursor.close()
         conn.close() 
-        return make_response(jsonify({'status': 'ok'}), 200)
+        return "OK"
     except Exception as e:
         return f"error 2 {e}"
 
