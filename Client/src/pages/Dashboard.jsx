@@ -20,6 +20,21 @@ const Dashboard = () => {
     staleTime: 4000,
   });
 
+/* funcion prediccion */
+
+  const handlePredictionClick = () => {
+    fetch("https://api-hr-models.onrender.com/new_prediction", { headers: { token },
+  })
+      .then(response => response.json())
+      .then(predictionData => {
+        // Realiza cualquier acción adicional con los datos de predicción recibidos
+        console.log(predictionData);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  };
+
   if (isLoading) {
     return <div>Cargando...</div>;
   }
@@ -55,11 +70,10 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="predictionandtraining" style={{ display: "flex", justifyContent: "center", marginBottom:"50px" }}>
-        <button>TRAINING MODEL</button> 
-        <button>NEW PREDICTION</button>
-        
+      <div className="predictionandtraining" style={{ display: "flex", justifyContent: "center", marginBottom: "50px" }}>
+        <button onClick={handlePredictionClick}>PREDICTION</button>
       </div>
+
     </div>
   );
 };
