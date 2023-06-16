@@ -27,6 +27,8 @@ dbconfig = {
     "password": db_password,
     "database": db_database
 }
+
+
 connection_pool = pooling.MySQLConnectionPool(pool_name="mypool", pool_size=2, **dbconfig)
 # Función auxiliar para obtener una conexión del pool
 def get_connection():
@@ -80,16 +82,10 @@ def create_graph_pie(df_graph_pie):
         "High": "#FABC09",
         "Very high": "#DB4437"
     }
-    count_values = {    
-        "Low": 951,
-        "Medium": 931,
-        "High": 918,
-        "Very high": 898
-    }
     fig = go.Figure(data=[
         go.Pie(
             labels=list(count_values.keys()),  
-            values=list(count_values.values()),  
+            values=list(count_values.values),  
             hole=0.4,
             pull=[0.05, 0.05, 0.05, 0.05],
             marker=dict(colors=[colors[label] for label in count_values.keys()])
