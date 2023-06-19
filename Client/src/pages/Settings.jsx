@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import { useAuth } from "../context/auth";
 import _ from "lodash";
 import authService from "../services/authService";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
 
 function Settings() {
   const [settings, setSettings] = useState({});
@@ -22,7 +24,7 @@ function Settings() {
 
   const handleSettings = async (data) => {
     console.log(data);
-
+    toast.success("Notification have been send");
     authService.updateSettings(data).then(console.log);
   };
 
@@ -41,6 +43,7 @@ function Settings() {
         submitLabel= "SEND"
         onSubmit={handleSettings}
       />{" "}
+      <ToastContainer />
     </div>
   );
 }
